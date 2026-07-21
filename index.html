@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>cyberbuam — security terminal</title>
+<meta name="description" content="Interactive cyber security knowledge base and quiz terminal">
+<meta name="theme-color" content="#03080d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="cyberbuam">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+  @font-face{
+    font-family:"Press Start 2P";
+    src:url("fonts/press-start-2p.woff2") format("woff2");
+    font-weight:400; font-style:normal; font-display:swap;
+  }
+  :root{
+    --bg:#03080d;
+    --panel:#081117;
+    --panel-2:#0a161d;
+    --border:#123240;
+    --border-bright:#39d6ff;
+    --ink:#c7f3ff;
+    --ink-dim:#4f8fa3;
+    --accent:#39d6ff;
+    --accent-dim:rgba(57,214,255,0.14);
+    --green:#00ff88;
+    --amber:#ffd23f;
+    --red:#ff4d5e;
+    --magenta:#ff3fd6;
+    --font: "Press Start 2P", "Consolas", "Cascadia Code", "JetBrains Mono", "Fira Code", monospace;
+    --font-pixel: var(--font);
+    --radius-tile:14px;
+  }
+  *{box-sizing:border-box;}
+  html{ background:var(--bg); }
+  html,body{margin:0;padding:0; overscroll-behavior:none;}
+  body{
+    background:transparent;
+    color:var(--ink);
+    font-family:var(--font);
+    font-size:13px;
+    line-height:1.7;
+    min-height:100vh;
+    min-height:100dvh;
+    padding:calc(18px + env(safe-area-inset-top)) calc(14px + env(safe-area-inset-right)) calc(84px + env(safe-area-inset-bottom)) calc(14px + env(safe-area-inset-left));
+    position:relative;
+  }
+  body::after{
+    content:"";
+    position:fixed; inset:0; z-index:-2; pointer-events:none;
+    background: radial-gradient(circle at 50% 0%, #0a1c24 0%, var(--bg) 60%);
+  }
+  #netCanvas{
+    position:fixed; inset:0; z-index:-1; pointer-events:none;
+    width:100%; height:100%; opacity:0.55;
+  }
+  a{ color:var(--accent); }
+  /* Undertale-style pixel font applied app-wide (see --font in :root) */
+  h1,h2,h3,h4{ margin:0 0 10px; font-weight:400; font-family:var(--font-pixel); line-height:1.7; }
+  h2{ font-size:0.95rem; }
+  h3{ font-size:0.78rem; }
+  h4{ font-size:0.7rem; }
+  p{ line-height:1.55; }
+  .wrap{ max-width:880px; margin:0 auto; }
+
+  /* ---------------- top bar ---------------- */
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:10px; margin-bottom:18px; max-width:880px; margin-left:auto; margin-right:auto;
+  }
+  .brand{
+    display:flex; align-items:center; gap:8px; font-weight:400; letter-spacing:0;
+    color:var(--accent); text-decoration:none; font-size:0.72rem; font-family:var(--font-pixel);
+  }
+  .brand .dot{ width:9px; height:9px; border-radius:50%; background:var(--green); box-shadow:0 0 8px var(--green); animation:pulseDot 1.8s ease-in-out infinite; }
+  @keyframes pulseDot{ 0%,100%{opacity:1;} 50%{opacity:0.35;} }
+  .topnav{ display:flex; gap:6px; }
+  .topnav button, .icon-btn{
+    background:var(--panel); border:1px solid var(--border); color:var(--ink);
+    font-family:var(--font); font-size:0.82rem; padding:8px 10px; border-radius:10px; cursor:pointer;
+  }
+  .topnav button.active{ border-color:var(--border-bright); color:var(--accent); box-shadow:0 0 0 1px var(--border-bright) inset; }
+  .topnav button:hover, .icon-btn:hover{ border-color:var(--border-bright); }
+
+  /* ---------------- cards / layout ---------------- */
+  .card{
+    background:var(--panel); border:1px solid var(--border); border-radius:var(--radius-tile);
+    padding:16px; margin-bottom:14px;
+  }
+  .module-title{ color:var(--ink-dim); text-transform:uppercase; font-size:0.75rem; letter-spacing:1px; margin:18px 0 8px; }
+  .topic-list{ display:flex; flex-direction:column; gap:10px; }
+  .topic-row{
+    display:flex; align-items:center; gap:12px; background:var(--panel); border:1px solid var(--border);
+    border-radius:var(--radius-tile); padding:14px 16px; cursor:pointer; text-align:left;
+    color:var(--ink); font-family:var(--font);
+  }
+  .topic-row:hover{ border-color:var(--border-bright); }
+  .topic-num{
+    width:34px; height:34px; border-radius:9px; background:var(--accent-dim); color:var(--accent);
+    display:flex; align-items:center; justify-content:center; font-size:0.55rem; flex-shrink:0;
+  }
+  .topic-row.read .topic-num{ background:rgba(0,255,136,0.16); color:var(--green); }
+  .topic-main{ flex:1; min-width:0; }
+  .topic-main h3{ font-size:0.7rem; line-height:1.6; margin:0 0 6px; }
+  .topic-main p{ margin:0; font-size:0.82rem; color:var(--ink-dim); }
+  .topic-badges{ display:flex; gap:6px; flex-shrink:0; font-size:0.72rem; }
+  .badge{ padding:4px 8px; border-radius:20px; border:1px solid var(--border); color:var(--ink-dim); font-size:0.58rem; }
+  .badge.done{ border-color:var(--green); color:var(--green); }
+  .badge.quiz{ border-color:var(--amber); color:var(--amber); }
+
+  .progress-bar{ height:6px; border-radius:6px; background:var(--panel-2); overflow:hidden; border:1px solid var(--border); }
+  .progress-bar > span{ display:block; height:100%; background:linear-gradient(90deg, var(--accent), var(--green)); }
+
+  /* ---------------- topic view ---------------- */
+  .back-btn{ background:none; border:none; color:var(--accent); font-family:var(--font); cursor:pointer; padding:0 0 12px; font-size:0.85rem; }
+  .keyterm-list{ display:flex; flex-wrap:wrap; gap:8px; }
+  .keyterm-chip{ background:var(--panel-2); border:1px solid var(--border); border-radius:8px; padding:6px 10px; font-size:0.8rem; }
+  .keyterm-chip b{ color:var(--accent); }
+  details.raw-details{ margin-top:10px; }
+  details.raw-details > summary{ cursor:pointer; color:var(--ink-dim); font-size:0.85rem; padding:6px 0; }
+  .raw-text{ white-space:pre-wrap; font-size:0.82rem; line-height:1.6; color:var(--ink-dim); max-height:420px; overflow:auto; padding:10px; background:var(--panel-2); border-radius:10px; border:1px solid var(--border); }
+
+  /* ---------------- widgets (shared look) ---------------- */
+  .wd-block{ margin:16px 0; }
+  .wd-block-title{ font-size:0.66rem; line-height:1.7; color:var(--accent); }
+  .wd-hint{ color:var(--ink-dim); font-size:0.82rem; }
+  .wd-btn{
+    background:var(--accent-dim); border:1px solid var(--border-bright); color:var(--accent);
+    font-family:var(--font); padding:7px 12px; border-radius:8px; cursor:pointer; font-size:0.82rem;
+  }
+  .wd-btn-ghost{ background:transparent; color:var(--ink); border-color:var(--border); }
+  .wd-btn:disabled{ opacity:0.35; cursor:default; }
+
+  .wd-hotspot-grid{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px; }
+  .wd-layout-stack .wd-hotspot-grid{ flex-direction:column-reverse; align-items:stretch; }
+  .wd-chip{
+    background:var(--panel-2); border:1px solid var(--border); border-radius:10px; padding:10px 12px;
+    color:var(--ink); font-family:var(--font); cursor:pointer; display:flex; flex-direction:column; gap:2px;
+    text-align:left; min-width:120px; flex:1 1 120px;
+  }
+  .wd-layout-stack .wd-chip{ flex:none; }
+  .wd-chip:hover{ border-color:var(--border-bright); }
+  .wd-chip.active{ border-color:var(--accent); box-shadow:0 0 0 1px var(--accent) inset; }
+  .wd-chip-icon{ font-size:1.3rem; }
+  .wd-chip-label{ font-size:0.78rem; }
+  .wd-chip-short{ font-size:0.72rem; color:var(--ink-dim); }
+  .wd-hotspot-detail{ background:var(--panel-2); border:1px solid var(--border); border-radius:10px; padding:12px; min-height:64px; }
+  .wd-detail-title{ color:var(--accent); margin-bottom:4px; }
+  .wd-detail-body{ font-size:0.85rem; color:var(--ink); line-height:1.5; }
+
+  .wd-stepflow-stage{ background:var(--panel-2); border:1px solid var(--border); border-radius:10px; padding:14px; }
+  .wd-stepflow-rail{ display:flex; gap:6px; margin-bottom:12px; }
+  .wd-rail-dot{ flex:1; height:5px; border-radius:4px; background:var(--border); }
+  .wd-rail-dot.done{ background:var(--ink-dim); }
+  .wd-rail-dot.active{ background:var(--accent); box-shadow:0 0 6px var(--accent); }
+  .wd-step-title{ color:var(--accent); margin-bottom:4px; }
+  .wd-step-detail{ font-size:0.85rem; line-height:1.5; margin-bottom:12px; }
+  .wd-stepflow-controls{ display:flex; gap:8px; }
+
+  .wd-linkflow{ display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+  .wd-actor{
+    background:var(--panel); border:1px solid var(--border-bright); border-radius:10px; padding:10px 14px;
+    font-size:0.7rem; flex-shrink:0; text-align:center;
+  }
+  .wd-linkflow-track{ position:relative; flex:1; height:2px; background:var(--border); border-radius:2px; }
+  .wd-packet{ position:absolute; top:50%; transform:translate(-50%,-50%); font-size:1.2rem; left:0; }
+  .wd-packet-fwd{ animation:packetFwd 1.1s ease-in-out forwards; }
+  .wd-packet-back{ animation:packetBack 1.1s ease-in-out forwards; }
+  @keyframes packetFwd{ from{ left:0; } to{ left:100%; } }
+  @keyframes packetBack{ from{ left:100%; } to{ left:0; } }
+
+  .wd-flipcards{ display:grid; grid-template-columns:repeat(auto-fill, minmax(140px,1fr)); gap:10px; }
+  .wd-flipcard{ perspective:800px; height:96px; cursor:pointer; }
+  .wd-flipcard-inner{ position:relative; width:100%; height:100%; transition:transform 0.5s; transform-style:preserve-3d; }
+  .wd-flipcard.flipped .wd-flipcard-inner{ transform:rotateY(180deg); }
+  .wd-flipcard-face{
+    position:absolute; inset:0; backface-visibility:hidden; border-radius:10px; border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center; text-align:center; padding:8px; font-size:0.82rem;
+  }
+  .wd-flipcard-front{ background:var(--panel-2); color:var(--accent); }
+  .wd-flipcard-back{ background:var(--accent-dim); transform:rotateY(180deg); color:var(--ink); font-size:0.76rem; line-height:1.4; }
+
+  .wd-matching-status{ font-size:0.82rem; color:var(--ink-dim); margin-bottom:10px; }
+  .wd-matching-cols{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .wd-matching-col{ display:flex; flex-direction:column; gap:8px; }
+  .wd-match-btn{
+    background:var(--panel-2); border:1px solid var(--border); border-radius:8px; padding:9px 10px;
+    color:var(--ink); font-family:var(--font); font-size:0.78rem; cursor:pointer; text-align:left;
+  }
+  .wd-match-btn.selected{ border-color:var(--accent); }
+  .wd-match-btn.matched{ border-color:var(--green); color:var(--green); opacity:0.75; cursor:default; }
+  .wd-match-btn.wrong{ border-color:var(--red); animation:shake 0.3s; }
+  @keyframes shake{ 0%,100%{transform:translateX(0);} 25%{transform:translateX(-4px);} 75%{transform:translateX(4px);} }
+
+  /* ---------------- quiz ---------------- */
+  .quiz-progress{ font-size:0.8rem; color:var(--ink-dim); margin-bottom:10px; }
+  .quiz-q{ font-size:1rem; margin-bottom:14px; }
+  .quiz-choices{ display:flex; flex-direction:column; gap:8px; }
+  .quiz-choice{
+    background:var(--panel-2); border:1px solid var(--border); border-radius:10px; padding:12px 14px;
+    color:var(--ink); font-family:var(--font); text-align:left; cursor:pointer; font-size:0.88rem;
+  }
+  .quiz-choice:hover{ border-color:var(--border-bright); }
+  .quiz-choice.correct{ border-color:var(--green); color:var(--green); }
+  .quiz-choice.incorrect{ border-color:var(--red); color:var(--red); }
+  .quiz-explain{ margin-top:12px; font-size:0.82rem; color:var(--ink-dim); background:var(--panel-2); border-radius:10px; padding:10px; }
+  .quiz-actions{ margin-top:14px; display:flex; justify-content:flex-end; }
+  .quiz-hub-list{ display:flex; flex-direction:column; gap:10px; }
+  .quiz-result{ text-align:center; padding:20px 0; }
+  .quiz-result .big{ font-size:1.6rem; font-family:var(--font-pixel); color:var(--accent); line-height:1.8; }
+
+  /* ---------------- search ---------------- */
+  .search-input{
+    width:100%; background:var(--panel-2); border:1px solid var(--border); border-radius:10px;
+    color:var(--ink); font-family:var(--font); padding:12px 14px; font-size:0.95rem; margin-bottom:14px;
+  }
+  .search-result{ padding:12px 14px; }
+  .search-result .snippet{ font-size:0.8rem; color:var(--ink-dim); }
+  mark{ background:var(--accent-dim); color:var(--accent); border-radius:3px; padding:0 2px; }
+
+  /* ---------------- uplink intro ---------------- */
+  .uplink-screen{
+    position:fixed; inset:0; z-index:50; background:#010407;
+    display:flex; align-items:center; justify-content:center; transition:opacity 0.6s;
+  }
+  .uplink-screen.uplink-hide{ opacity:0; pointer-events:none; }
+  .uplink-scan{
+    position:absolute; inset:0; overflow:hidden; pointer-events:none;
+    background:
+      repeating-linear-gradient(0deg, rgba(57,214,255,0.035) 0px, rgba(57,214,255,0.035) 1px, transparent 1px, transparent 3px);
+  }
+  .uplink-radar{
+    position:absolute; top:50%; left:50%; width:70vmax; height:70vmax; transform:translate(-50%,-50%);
+    border-radius:50%; border:1px solid rgba(57,214,255,0.12);
+    background: conic-gradient(from 0deg, rgba(57,214,255,0.22), transparent 40%);
+    animation:radarSpin 3.2s linear infinite;
+  }
+  @keyframes radarSpin{ to{ transform:translate(-50%,-50%) rotate(360deg); } }
+  .uplink-panel{
+    position:relative; z-index:2; width:min(440px, 88vw); background:rgba(4,10,14,0.9);
+    border:1px solid var(--border-bright); border-radius:14px; padding:22px 22px 18px; box-shadow:0 0 40px rgba(57,214,255,0.12);
+  }
+  .uplink-label{ color:var(--ink-dim); font-size:0.6rem; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:14px; font-family:var(--font-pixel); }
+  .uplink-lines{ min-height:150px; font-size:0.62rem; line-height:2.3; font-family:var(--font-pixel); }
+  .uplink-ok{ color:var(--green); margin-left:6px; }
+  .uplink-bar{ height:5px; border-radius:5px; background:rgba(255,255,255,0.06); margin:14px 0 10px; overflow:hidden; }
+  .uplink-bar > span{ display:block; height:100%; width:0%; background:linear-gradient(90deg, var(--accent), var(--green)); transition:width 0.4s; }
+  .uplink-hint{ color:var(--ink-dim); font-size:0.55rem; text-align:center; opacity:0.8; font-family:var(--font-pixel); }
+  .uplink-enter{
+    margin-top:14px; width:100%; background:var(--accent-dim); border:1px solid var(--border-bright); color:var(--accent);
+    font-family:var(--font-pixel); padding:12px 10px; border-radius:8px; cursor:pointer; font-size:0.6rem; display:none; line-height:1.6;
+  }
+  .uplink-enter.show{ display:block; }
+
+  .footer-note{ text-align:center; color:var(--ink-dim); font-size:0.72rem; margin-top:24px; opacity:0.7; }
+  .typewriter-text{ cursor:pointer; min-height:1.5em; font-family:var(--font-pixel); font-size:0.68rem; line-height:2.1; }
+
+  /* ---------------- touch/mobile baseline ---------------- */
+  button, .search-input, summary{ -webkit-tap-highlight-color:transparent; touch-action:manipulation; }
+  button{ min-height:40px; }
+  .wd-flipcard-face{ -webkit-backface-visibility:hidden; }
+  .wd-flipcard-inner{ -webkit-transform-style:preserve-3d; }
+  .raw-text{ -webkit-overflow-scrolling:touch; }
+
+  @media (max-width:520px){
+    .topbar{ flex-wrap:wrap; }
+    .topic-row{ padding:12px 14px; }
+    .wd-matching-cols{ grid-template-columns:1fr; }
+    .wd-match-btn{ padding:12px 10px; font-size:0.82rem; }
+    .wd-linkflow{ flex-direction:column; gap:14px; }
+    .wd-linkflow-track{ flex:none; width:2px; height:60px; }
+    .wd-packet-fwd{ animation-name:packetFwdV; }
+    .wd-packet-back{ animation-name:packetBackV; }
+    .wd-stepflow-controls{ flex-wrap:wrap; }
+    .wd-stepflow-controls .wd-btn{ flex:1 1 auto; min-height:44px; }
+    .quiz-choice{ padding:14px; min-height:46px; }
+  }
+  @keyframes packetFwdV{ from{ top:0; left:50%; } to{ top:100%; left:50%; } }
+  @keyframes packetBackV{ from{ top:100%; left:50%; } to{ top:0; left:50%; } }
+</style>
+</head>
+<body>
+
+<div class="uplink-screen" id="uplinkScreen">
+  <div class="uplink-scan" aria-hidden="true"></div>
+  <div class="uplink-radar" aria-hidden="true"></div>
+  <div class="uplink-panel">
+    <div class="uplink-label">secure_uplink</div>
+    <div class="uplink-lines" id="uplinkLines"></div>
+    <div class="uplink-bar"><span id="uplinkBarFill"></span></div>
+    <div class="uplink-hint" id="uplinkHint">[ tap or press any key to skip ]</div>
+    <button class="uplink-enter" id="uplinkEnter" type="button" data-fx-skip>&gt; enter cyberbuam_</button>
+  </div>
+</div>
+
+<canvas id="netCanvas"></canvas>
+
+<div class="topbar">
+  <a href="#/" class="brand"><span class="dot"></span> cyberbuam</a>
+  <div class="topnav">
+    <button type="button" data-route="/">home</button>
+    <button type="button" data-route="/search">search</button>
+    <button type="button" data-route="/quiz">quiz</button>
+    <button class="icon-btn" id="muteBtn" type="button">🔊</button>
+  </div>
+</div>
+
+<div class="wrap" id="view"></div>
+
+<div class="footer-note">cyberbuam — offline knowledge terminal, part of the buam family</div>
+
+<script src="buam-fx.js"></script>
+<script src="widgets.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  /* =================== undertale-style typewriter text =================== */
+  // reveals text one character at a time into `el`, playing a short
+  // pitched blip per glyph (Undertale-style dialogue). Returns a
+  // controller with .skip() to instantly complete the current line —
+  // wire that up to a tap/click so reading never feels blocking.
+  // deliberately NOT gated behind prefers-reduced-motion: this is a short,
+  // tap-to-skip effect the user wants to see regardless of the OS setting.
+  function typewrite(el, text, opts){
+    opts = opts || {};
+    var speed = opts.speed || 22;
+    var voiceBase = opts.voiceBase || 320;
+    var onDone = opts.onDone || function(){};
+    el.textContent = "";
+
+    var i = 0;
+    var timer = null;
+    var finished = false;
+
+    function playBlip(ch){
+      if(!window.buamFx || !ch.trim()) return;
+      var pitch = voiceBase + (ch.charCodeAt(0) % 9) * 16;
+      window.buamFx.tone(pitch, 0.045, "square", 0.08);
+    }
+
+    function finish(){
+      if(finished) return;
+      finished = true;
+      clearTimeout(timer);
+      onDone();
+    }
+
+    function step(){
+      if(i >= text.length){ finish(); return; }
+      el.textContent += text[i];
+      playBlip(text[i]);
+      i++;
+      timer = setTimeout(step, speed);
+    }
+    timer = setTimeout(step, speed);
+
+    return {
+      skip: function(){
+        if(finished) return;
+        clearTimeout(timer);
+        el.textContent = text;
+        finish();
+      }
+    };
+  }
+
+  /* =================== network topology background =================== */
+  (function netBg(){
+    var canvas = document.getElementById("netCanvas");
+    var ctx = canvas.getContext("2d");
+    var w, h, nodes = [], packets = [];
+    // deliberately not gated behind prefers-reduced-motion — see typewrite() above
+
+    function resize(){
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", resize);
+    resize();
+
+    var NODE_COUNT = Math.min(26, Math.max(14, Math.floor((w * h) / 70000)));
+    for(var i = 0; i < NODE_COUNT; i++){
+      nodes.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 0.12,
+        vy: (Math.random() - 0.5) * 0.12,
+      });
+    }
+
+    function maybeSpawnPacket(){
+      if(Math.random() > 0.02) return;
+      var a = nodes[Math.floor(Math.random() * nodes.length)];
+      var b = nodes[Math.floor(Math.random() * nodes.length)];
+      if(a === b) return;
+      packets.push({ a: a, b: b, t: 0 });
+    }
+
+    function tick(){
+      ctx.clearRect(0, 0, w, h);
+      nodes.forEach(function(n){
+        n.x += n.vx; n.y += n.vy;
+        if(n.x < 0 || n.x > w) n.vx *= -1;
+        if(n.y < 0 || n.y > h) n.vy *= -1;
+      });
+
+      for(var i = 0; i < nodes.length; i++){
+        for(var j = i + 1; j < nodes.length; j++){
+          var a = nodes[i], b = nodes[j];
+          var dx = a.x - b.x, dy = a.y - b.y;
+          var dist = Math.sqrt(dx * dx + dy * dy);
+          if(dist < 170){
+            ctx.strokeStyle = "rgba(57,214,255," + (0.14 * (1 - dist / 170)) + ")";
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      nodes.forEach(function(n){
+        ctx.fillStyle = "rgba(57,214,255,0.55)";
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, 1.6, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      maybeSpawnPacket();
+      packets = packets.filter(function(p){
+        p.t += 0.012;
+        if(p.t >= 1) return false;
+        var x = p.a.x + (p.b.x - p.a.x) * p.t;
+        var y = p.a.y + (p.b.y - p.a.y) * p.t;
+        ctx.fillStyle = "rgba(0,255,136,0.9)";
+        ctx.beginPath();
+        ctx.arc(x, y, 2.4, 0, Math.PI * 2);
+        ctx.fill();
+        return true;
+      });
+
+      requestAnimationFrame(tick);
+    }
+    tick();
+  })();
+
+  /* =================== uplink intro sequence =================== */
+  (function uplink(){
+    var screen = document.getElementById("uplinkScreen");
+    var linesWrap = document.getElementById("uplinkLines");
+    var bar = document.getElementById("uplinkBarFill");
+    var hint = document.getElementById("uplinkHint");
+    var enterBtn = document.getElementById("uplinkEnter");
+    var done = false;
+
+    // intentionally no persisted "seen intro" flag — the uplink sequence
+    // plays on every full page load/refresh, by design
+    var steps = [
+      { text: "resolving host cyberbuam.local", pct: 15 },
+      { text: "negotiating TLS handshake", pct: 34 },
+      { text: "authenticating session", pct: 55 },
+      { text: "loading knowledge base", pct: 78 },
+      { text: "mounting quiz engine", pct: 92 },
+      { text: "access granted", pct: 100, ok: true },
+    ];
+
+    var i = 0;
+    var currentTypewriter = null;
+
+    function next(){
+      if(i >= steps.length){
+        finish();
+        return;
+      }
+      var s = steps[i];
+      i++;
+      var line = document.createElement("div");
+      line.className = "uplink-line";
+      var msg = document.createElement("span");
+      line.appendChild(msg);
+      linesWrap.appendChild(line);
+      bar.style.width = s.pct + "%";
+
+      currentTypewriter = typewrite(msg, "> " + s.text + (s.ok ? "" : " ..."), {
+        speed: 20,
+        voiceBase: 340,
+        onDone: function(){
+          currentTypewriter = null;
+          if(s.ok){
+            var ok = document.createElement("span");
+            ok.className = "uplink-ok";
+            ok.textContent = " OK";
+            line.appendChild(ok);
+            if(window.buamFx) window.buamFx.chime();
+          }
+          setTimeout(next, 260);
+        },
+      });
+    }
+    setTimeout(next, 250);
+
+    function finish(){
+      hint.style.display = "none";
+      enterBtn.classList.add("show");
+    }
+
+    function proceed(){
+      if(done) return;
+      done = true;
+      if(window.buamFx) window.buamFx.confirm();
+      screen.classList.add("uplink-hide");
+      setTimeout(function(){ screen.remove(); }, 650);
+    }
+
+    function advance(){
+      if(currentTypewriter){ currentTypewriter.skip(); return; }
+      if(i >= steps.length) proceed();
+    }
+
+    enterBtn.addEventListener("click", proceed);
+    screen.addEventListener("click", advance);
+    window.addEventListener("keydown", advance);
+  })();
+
+  /* =================== mute button =================== */
+  var muteBtn = document.getElementById("muteBtn");
+  function refreshMute(){ muteBtn.textContent = (window.buamFx && window.buamFx.isMuted()) ? "🔇" : "🔊"; }
+  muteBtn.addEventListener("click", function(){
+    if(window.buamFx) window.buamFx.toggleMuted();
+    refreshMute();
+  });
+  refreshMute();
+
+  /* =================== data + progress =================== */
+  var DATA = null;
+  var ALL_TOPICS = [];
+
+  function loadData(){
+    return fetch("content.json").then(function(r){ return r.json(); }).then(function(d){
+      DATA = d;
+      ALL_TOPICS = [];
+      d.modules.forEach(function(m){
+        m.topics.forEach(function(t){ ALL_TOPICS.push({ module: m, topic: t }); });
+      });
+      return d;
+    });
+  }
+
+  function readKey(id){ return "cyberbuam-read-" + id; }
+  function quizKey(id){ return "cyberbuam-quiz-" + id; }
+
+  function isRead(id){ return localStorage.getItem(readKey(id)) === "1"; }
+  function markRead(id){ localStorage.setItem(readKey(id), "1"); }
+
+  function getQuizStats(id){
+    try{ return JSON.parse(localStorage.getItem(quizKey(id)) || "null") || { correct: 0, total: 0 }; }
+    catch(e){ return { correct: 0, total: 0 }; }
+  }
+  function saveQuizStats(id, stats){ localStorage.setItem(quizKey(id), JSON.stringify(stats)); }
+
+  function findTopic(id){
+    for(var i = 0; i < ALL_TOPICS.length; i++){
+      if(ALL_TOPICS[i].topic.id === id) return ALL_TOPICS[i];
+    }
+    return null;
+  }
+
+  /* =================== router =================== */
+  var view = document.getElementById("view");
+
+  function setActiveNav(path){
+    document.querySelectorAll(".topnav button[data-route]").forEach(function(b){
+      b.classList.toggle("active", b.getAttribute("data-route") === "/" + (path.split("/")[1] || ""));
+    });
+  }
+
+  function router(){
+    var hash = location.hash.replace(/^#/, "") || "/";
+    setActiveNav(hash);
+    var parts = hash.split("/").filter(Boolean);
+    if(parts.length === 0){ renderHome(); return; }
+    if(parts[0] === "topic" && parts[1]) { renderTopic(parts[1]); return; }
+    if(parts[0] === "quiz" && parts[1]) { renderQuizSession(parts[1]); return; }
+    if(parts[0] === "quiz") { renderQuizHub(); return; }
+    if(parts[0] === "search") { renderSearch(); return; }
+    renderHome();
+  }
+  window.addEventListener("hashchange", router);
+
+  document.querySelectorAll(".topnav button[data-route]").forEach(function(b){
+    b.addEventListener("click", function(){ location.hash = "#" + b.getAttribute("data-route"); });
+  });
+
+  /* =================== renderers =================== */
+  function esc(s){
+    return (s || "").replace(/[&<>]/g, function(c){ return { "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]; });
+  }
+
+  function renderHome(){
+    var totalTopics = ALL_TOPICS.length;
+    var readCount = ALL_TOPICS.filter(function(x){ return isRead(x.topic.id); }).length;
+    var pct = totalTopics ? Math.round((readCount / totalTopics) * 100) : 0;
+
+    var html = '<div class="card">' +
+      '<h2>Pre Security progress</h2>' +
+      '<p style="color:var(--ink-dim); font-size:0.85rem; margin-bottom:10px;">' + readCount + ' / ' + totalTopics + ' topics read</p>' +
+      '<div class="progress-bar"><span style="width:' + pct + '%"></span></div>' +
+      '</div>';
+
+    DATA.modules.forEach(function(m){
+      html += '<div class="module-title">' + esc(m.title) + '</div><div class="topic-list">';
+      m.topics.forEach(function(t, idx){
+        var read = isRead(t.id);
+        var qs = getQuizStats(t.id);
+        html += '<button class="topic-row' + (read ? " read" : "") + '" data-topic="' + t.id + '">' +
+          '<span class="topic-num">' + (idx + 1) + '</span>' +
+          '<span class="topic-main"><h3>' + esc(t.title) + '</h3><p>' + esc(t.summary) + '</p></span>' +
+          '<span class="topic-badges">' +
+            (read ? '<span class="badge done">read</span>' : '') +
+            (qs.total ? '<span class="badge quiz">' + qs.correct + '/' + qs.total + '</span>' : '') +
+          '</span>' +
+        '</button>';
+      });
+      html += '</div>';
+    });
+
+    view.innerHTML = html;
+    view.querySelectorAll(".topic-row").forEach(function(b){
+      b.addEventListener("click", function(){ location.hash = "#/topic/" + b.getAttribute("data-topic"); });
+    });
+  }
+
+  function renderTopic(id){
+    var found = findTopic(id);
+    if(!found){ renderHome(); return; }
+    var topic = found.topic;
+    markRead(topic.id);
+
+    var html = '<button class="back-btn" id="backBtn">&larr; back</button>';
+    html += '<div class="card"><h2>' + esc(topic.title) + '</h2><p id="topicIntroText" class="typewriter-text"></p></div>';
+
+    html += '<div id="interactiveHost"></div>';
+
+    if(topic.conclusion){
+      html += '<div class="card"><h4>Wrap-up</h4><p style="white-space:pre-wrap; font-size:0.88rem;">' + esc(topic.conclusion) + '</p></div>';
+    }
+
+    if(topic.keyTerms && topic.keyTerms.length){
+      html += '<div class="card"><h4>Key terms</h4><div class="keyterm-list">';
+      topic.keyTerms.forEach(function(k){
+        html += '<span class="keyterm-chip"><b>' + esc(k.term) + '</b> — ' + esc(k.def) + '</span>';
+      });
+      html += '</div></div>';
+    }
+
+    if(topic.rawText){
+      html += '<details class="raw-details"><summary>Read the full source notes</summary><div class="raw-text">' + esc(topic.rawText) + '</div></details>';
+    }
+
+    html += '<div class="card" style="margin-top:14px; text-align:center;">' +
+      '<button class="wd-btn" id="goQuizBtn">Take the quiz for this topic →</button>' +
+    '</div>';
+
+    view.innerHTML = html;
+    document.getElementById("backBtn").addEventListener("click", function(){ history.back(); });
+    document.getElementById("goQuizBtn").addEventListener("click", function(){ location.hash = "#/quiz/" + topic.id; });
+
+    var host = document.getElementById("interactiveHost");
+    (topic.interactives || []).forEach(function(block){
+      window.cyberWidgets.renderInteractive(host, block);
+    });
+
+    var introEl = document.getElementById("topicIntroText");
+    var introTyper = typewrite(introEl, topic.intro, { speed: 18, voiceBase: 300 });
+    introEl.addEventListener("click", function(){ introTyper.skip(); });
+  }
+
+  function renderQuizHub(){
+    var html = '<div class="card"><h2>Quiz terminal</h2><p style="color:var(--ink-dim); font-size:0.85rem;">Pick a topic to review, or run everything back to back.</p></div>';
+    html += '<div class="quiz-hub-list">';
+    ALL_TOPICS.forEach(function(x){
+      var qs = getQuizStats(x.topic.id);
+      html += '<button class="topic-row" data-topic="' + x.topic.id + '">' +
+        '<span class="topic-num">' + (qs.total ? Math.round((qs.correct / qs.total) * 100) + '%' : '—') + '</span>' +
+        '<span class="topic-main"><h3>' + esc(x.topic.title) + '</h3><p>' + (x.topic.quiz ? x.topic.quiz.length : 0) + ' questions</p></span>' +
+      '</button>';
+    });
+    html += '</div>';
+    html += '<div class="card" style="margin-top:14px; text-align:center;"><button class="wd-btn" id="allQuizBtn">Review all topics mixed together</button></div>';
+
+    view.innerHTML = html;
+    view.querySelectorAll(".topic-row").forEach(function(b){
+      b.addEventListener("click", function(){ location.hash = "#/quiz/" + b.getAttribute("data-topic"); });
+    });
+    document.getElementById("allQuizBtn").addEventListener("click", function(){ location.hash = "#/quiz/all"; });
+  }
+
+  function renderQuizSession(topicId){
+    var questions = [];
+    var isAll = topicId === "all";
+    if(isAll){
+      ALL_TOPICS.forEach(function(x){ (x.topic.quiz || []).forEach(function(q){ questions.push(Object.assign({ topicId: x.topic.id }, q)); }); });
+      // shuffle
+      for(var i = questions.length - 1; i > 0; i--){
+        var j = Math.floor(Math.random() * (i + 1));
+        var t = questions[i]; questions[i] = questions[j]; questions[j] = t;
+      }
+    } else {
+      var found = findTopic(topicId);
+      if(!found){ renderQuizHub(); return; }
+      questions = (found.topic.quiz || []).map(function(q){ return Object.assign({ topicId: topicId }, q); });
+    }
+
+    if(!questions.length){ renderQuizHub(); return; }
+
+    var idx = 0, correctCount = 0, answered = false;
+    var perTopicResult = {};
+
+    function renderQuestion(){
+      var q = questions[idx];
+      var html = '<button class="back-btn" id="backBtn">&larr; back</button>';
+      html += '<div class="quiz-progress">Question ' + (idx + 1) + ' / ' + questions.length + '</div>';
+      html += '<div class="card"><div class="quiz-q">' + esc(q.q) + '</div><div class="quiz-choices">';
+      q.choices.forEach(function(c, ci){
+        html += '<button class="quiz-choice" data-idx="' + ci + '" data-fx-skip>' + esc(c) + '</button>';
+      });
+      html += '</div><div id="quizExplain"></div><div class="quiz-actions"><button class="wd-btn" id="nextBtn" style="display:none;">' +
+        (idx === questions.length - 1 ? "See results →" : "Next question →") + '</button></div></div>';
+
+      view.innerHTML = html;
+      document.getElementById("backBtn").addEventListener("click", function(){ location.hash = "#/quiz"; });
+      answered = false;
+
+      view.querySelectorAll(".quiz-choice").forEach(function(btn){
+        btn.addEventListener("click", function(){
+          if(answered) return;
+          answered = true;
+          var chosen = parseInt(btn.getAttribute("data-idx"), 10);
+          var correct = chosen === q.answer;
+          view.querySelectorAll(".quiz-choice").forEach(function(b, bi){
+            if(bi === q.answer) b.classList.add("correct");
+            else if(bi === chosen) b.classList.add("incorrect");
+          });
+          if(correct){
+            correctCount++;
+            if(window.buamFx) window.buamFx.chime();
+          } else if(window.buamFx) window.buamFx.cancel();
+
+          if(!perTopicResult[q.topicId]) perTopicResult[q.topicId] = { correct: 0, total: 0 };
+          perTopicResult[q.topicId].total++;
+          if(correct) perTopicResult[q.topicId].correct++;
+
+          document.getElementById("quizExplain").innerHTML = '<div class="quiz-explain">' + esc(q.explain) + '</div>';
+          document.getElementById("nextBtn").style.display = "inline-block";
+        });
+      });
+
+      document.getElementById("nextBtn").addEventListener("click", function(){
+        idx++;
+        if(idx >= questions.length){ renderResult(); } else { renderQuestion(); }
+      });
+    }
+
+    function renderResult(){
+      Object.keys(perTopicResult).forEach(function(tid){
+        var prev = getQuizStats(tid);
+        var merged = { correct: prev.correct + perTopicResult[tid].correct, total: prev.total + perTopicResult[tid].total };
+        saveQuizStats(tid, merged);
+      });
+      var pct = Math.round((correctCount / questions.length) * 100);
+      view.innerHTML = '<div class="card quiz-result">' +
+        '<div class="big">' + correctCount + ' / ' + questions.length + '</div>' +
+        '<p style="color:var(--ink-dim);">' + pct + '% correct</p>' +
+        '<button class="wd-btn" id="againBtn" style="margin-top:10px;">Try again</button> ' +
+        '<button class="wd-btn wd-btn-ghost" id="hubBtn" style="margin-top:10px;">Back to quiz hub</button>' +
+      '</div>';
+      document.getElementById("againBtn").addEventListener("click", function(){ router(); });
+      document.getElementById("hubBtn").addEventListener("click", function(){ location.hash = "#/quiz"; });
+    }
+
+    renderQuestion();
+  }
+
+  function renderSearch(){
+    view.innerHTML = '<div class="card"><h2>Search the knowledge base</h2>' +
+      '<input class="search-input" id="searchInput" placeholder="try: hypervisor, HTTP, boot, embedded...">' +
+      '<div id="searchResults"></div></div>';
+
+    var input = document.getElementById("searchInput");
+    var results = document.getElementById("searchResults");
+
+    function snippet(text, q){
+      var i = text.toLowerCase().indexOf(q.toLowerCase());
+      if(i === -1) return esc(text.slice(0, 140)) + "...";
+      var start = Math.max(0, i - 60);
+      var end = Math.min(text.length, i + q.length + 80);
+      var raw = text.slice(start, end);
+      var escd = esc(raw);
+      var re = new RegExp("(" + q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")", "ig");
+      return (start > 0 ? "..." : "") + escd.replace(re, "<mark>$1</mark>") + (end < text.length ? "..." : "");
+    }
+
+    function doSearch(){
+      var q = input.value.trim();
+      if(!q){ results.innerHTML = ""; return; }
+      var out = [];
+      ALL_TOPICS.forEach(function(x){
+        var t = x.topic;
+        var hay = [t.title, t.intro, t.conclusion, t.rawText, (t.keyTerms||[]).map(function(k){return k.term+" "+k.def;}).join(" ")].join(" \n ");
+        if(hay.toLowerCase().indexOf(q.toLowerCase()) !== -1){
+          out.push({ topic: t, snip: snippet(hay, q) });
+        }
+      });
+      if(!out.length){ results.innerHTML = '<p style="color:var(--ink-dim);">No matches yet.</p>'; return; }
+      results.innerHTML = out.map(function(r){
+        return '<button class="topic-row search-result" data-topic="' + r.topic.id + '">' +
+          '<span class="topic-main"><h3>' + esc(r.topic.title) + '</h3><p class="snippet">' + r.snip + '</p></span>' +
+        '</button>';
+      }).join("");
+      results.querySelectorAll(".search-result").forEach(function(b){
+        b.addEventListener("click", function(){ location.hash = "#/topic/" + b.getAttribute("data-topic"); });
+      });
+    }
+
+    input.addEventListener("input", doSearch);
+    setTimeout(function(){ input.focus(); }, 200);
+  }
+
+  /* =================== boot =================== */
+  loadData().then(router).catch(function(err){
+    view.innerHTML = '<div class="card"><h2>Failed to load content.json</h2><p>' + esc(String(err)) + '</p></div>';
+  });
+
+  if("serviceWorker" in navigator){
+    window.addEventListener("load", function(){
+      navigator.serviceWorker.register("sw.js").catch(function(){});
+    });
+  }
+})();
+</script>
+</body>
+</html>
