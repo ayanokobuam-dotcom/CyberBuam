@@ -81,11 +81,14 @@
   }
   .brand .dot{ width:9px; height:9px; border-radius:50%; background:var(--green); box-shadow:0 0 8px var(--green); animation:pulseDot 1.8s ease-in-out infinite; }
   @keyframes pulseDot{ 0%,100%{opacity:1;} 50%{opacity:0.35;} }
-  .topnav{ display:flex; gap:6px; }
+  .topnav{ display:flex; gap:6px; align-items:center; }
   .topnav button, .icon-btn{
     background:var(--panel); border:1px solid var(--border); color:var(--ink);
     font-family:var(--font); font-size:0.82rem; padding:8px 10px; border-radius:10px; cursor:pointer;
   }
+  .vol-group{ display:flex; gap:4px; }
+  .vol-group .icon-btn{ padding:8px 11px; }
+  .vol-group #volDownBtn, .vol-group #volUpBtn{ font-weight:700; }
   .topnav button.active{ border-color:var(--border-bright); color:var(--accent); box-shadow:0 0 0 1px var(--border-bright) inset; }
   .topnav button:hover, .icon-btn:hover{ border-color:var(--border-bright); }
 
@@ -308,7 +311,11 @@
     <button type="button" data-route="/">home</button>
     <button type="button" data-route="/search">search</button>
     <button type="button" data-route="/quiz">quiz</button>
-    <button class="icon-btn" id="muteBtn" type="button">🔊</button>
+    <div class="vol-group">
+      <button class="icon-btn" id="volDownBtn" type="button" aria-label="volume down">－</button>
+      <button class="icon-btn" id="muteBtn" type="button">🔊</button>
+      <button class="icon-btn" id="volUpBtn" type="button" aria-label="volume up">＋</button>
+    </div>
   </div>
 </div>
 
@@ -531,13 +538,26 @@
     window.addEventListener("keydown", advance);
   })();
 
-  /* =================== mute button =================== */
+  /* =================== mute + volume buttons =================== */
   var muteBtn = document.getElementById("muteBtn");
+  var volDownBtn = document.getElementById("volDownBtn");
+  var volUpBtn = document.getElementById("volUpBtn");
+  var VOL_STEP = 0.1;
   function refreshMute(){ muteBtn.textContent = (window.buamFx && window.buamFx.isMuted()) ? "🔇" : "🔊"; }
   muteBtn.addEventListener("click", function(){
     if(window.buamFx) window.buamFx.toggleMuted();
     refreshMute();
   });
+  function bumpVolume(delta){
+    if(!window.buamFx) return;
+    window.buamFx.setVolume(window.buamFx.getVolume() + delta);
+    if(window.buamFx.isMuted()){
+      window.buamFx.setMuted(false);
+      refreshMute();
+    }
+  }
+  volDownBtn.addEventListener("click", function(){ bumpVolume(-VOL_STEP); });
+  volUpBtn.addEventListener("click", function(){ bumpVolume(VOL_STEP); });
   refreshMute();
 
   /* =================== data + progress =================== */
