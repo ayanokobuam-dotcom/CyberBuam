@@ -1,9 +1,9 @@
 /* buam-fx.js — shared retro click SFX + bundled background music for all buam apps */
 (function(global){
   "use strict";
-  var MUTE_KEY = "buam-muted";
-  var POS_KEY = "buam-track-pos";
-  var VOL_KEY = "buam-music-vol";
+  var MUTE_KEY = "cyberbuam-muted";
+  var POS_KEY = "cyberbuam-track-pos";
+  var VOL_KEY = "cyberbuam-music-vol";
   var muted = localStorage.getItem(MUTE_KEY) === "1";
 
   var ctx = null, sfxGain = null, musicGain = null, musicStarted = false, unlocked = false;
