@@ -26,7 +26,7 @@
         '<span class="wd-chip-icon">' + item.icon + '</span>' +
         '<span class="wd-chip-label">' + item.label + '</span>' +
         '<span class="wd-chip-short">' + item.short + '</span>';
-      if(data.layout === "stack") chip.style.setProperty("--depth", i);
+      chip.style.setProperty("--depth", i);
       click(chip, function(){
         Array.prototype.forEach.call(grid.children, function(c){ c.classList.remove("active"); });
         chip.classList.add("active");
@@ -77,9 +77,12 @@
     function renderStep(){
       var step = data.steps[idx];
       dots.forEach(function(d, i){ d.classList.toggle("active", i === idx); d.classList.toggle("done", i < idx); });
+      textBox.classList.remove("wd-step-anim");
+      void textBox.offsetWidth; // restart animation
       textBox.innerHTML =
         '<div class="wd-step-title">' + (step.icon || "") + ' ' + step.title + '</div>' +
         '<div class="wd-step-detail">' + step.detail + '</div>';
+      textBox.classList.add("wd-step-anim");
       if(linkflow){
         var goingRight = step.from === "client";
         packet.textContent = step.icon || "📨";

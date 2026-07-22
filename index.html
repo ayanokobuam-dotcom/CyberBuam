@@ -151,6 +151,8 @@
   .wd-layout-stack .wd-chip{ flex:none; }
   .wd-chip:hover{ border-color:var(--border-bright); }
   .wd-chip.active{ border-color:var(--accent); box-shadow:0 0 0 1px var(--accent) inset; }
+  .wd-chip{ animation:wdChipIn 0.36s ease-out backwards; animation-delay:calc(var(--depth,0) * 60ms); }
+  @keyframes wdChipIn{ from{ opacity:0; transform:translateY(6px); } to{ opacity:1; transform:translateY(0); } }
   .wd-chip-icon{ font-size:1.3rem; }
   .wd-chip-label{ font-size:0.78rem; }
   .wd-chip-short{ font-size:0.72rem; color:var(--ink-dim); }
@@ -160,12 +162,14 @@
 
   .wd-stepflow-stage{ background:var(--panel-2); border:1px solid var(--border); border-radius:10px; padding:14px; }
   .wd-stepflow-rail{ display:flex; gap:6px; margin-bottom:12px; }
-  .wd-rail-dot{ flex:1; height:5px; border-radius:4px; background:var(--border); }
+  .wd-rail-dot{ flex:1; height:5px; border-radius:4px; background:var(--border); transition:background 0.25s ease, box-shadow 0.25s ease; }
   .wd-rail-dot.done{ background:var(--ink-dim); }
   .wd-rail-dot.active{ background:var(--accent); box-shadow:0 0 6px var(--accent); }
   .wd-step-title{ color:var(--accent); margin-bottom:4px; }
   .wd-step-detail{ font-size:0.85rem; line-height:1.5; margin-bottom:12px; }
   .wd-stepflow-controls{ display:flex; gap:8px; }
+  .wd-step-text.wd-step-anim{ animation:wdStepIn 0.32s ease-out; }
+  @keyframes wdStepIn{ from{ opacity:0; transform:translateX(8px); } to{ opacity:1; transform:translateX(0); } }
 
   .wd-linkflow{ display:flex; align-items:center; gap:10px; margin-bottom:14px; }
   .wd-actor{
@@ -198,9 +202,15 @@
     color:var(--ink); font-family:var(--font); font-size:0.78rem; cursor:pointer; text-align:left;
   }
   .wd-match-btn.selected{ border-color:var(--accent); }
-  .wd-match-btn.matched{ border-color:var(--green); color:var(--green); opacity:0.75; cursor:default; }
+  .wd-match-btn.matched{ border-color:var(--green); color:var(--green); opacity:0.75; cursor:default; animation:wdMatchPulse 0.4s ease-out; }
+  .wd-match-btn.matched::after{ content:" \2713"; }
   .wd-match-btn.wrong{ border-color:var(--red); animation:shake 0.3s; }
   @keyframes shake{ 0%,100%{transform:translateX(0);} 25%{transform:translateX(-4px);} 75%{transform:translateX(4px);} }
+  @keyframes wdMatchPulse{
+    0%{ transform:scale(1); box-shadow:0 0 0 rgba(0,255,136,0); }
+    40%{ transform:scale(1.05); box-shadow:0 0 12px rgba(0,255,136,0.55); }
+    100%{ transform:scale(1); box-shadow:0 0 0 rgba(0,255,136,0); }
+  }
 
   /* ---------------- quiz ---------------- */
   .quiz-progress{ font-size:0.8rem; color:var(--ink-dim); margin-bottom:10px; }

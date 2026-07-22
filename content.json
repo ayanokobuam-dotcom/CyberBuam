@@ -36,7 +36,7 @@
             },
             {
               "term": "Firmware (UEFI/BIOS)",
-              "def": "The low-level program that wakes up hardware before an OS exists."
+              "def": "The low-level program that wakes up hardware before an OS exists. UEFI is the modern standard; the older term 'BIOS' does the same job but has mostly been replaced by it."
             },
             {
               "term": "POST",
@@ -44,7 +44,7 @@
             },
             {
               "term": "Bootloader",
-              "def": "The small program that finds and hands control to the operating system."
+              "def": "The small program that finds the OS on the boot device, transfers it into RAM, then hands control over to it."
             }
           ],
           "interactives": [
@@ -125,7 +125,37 @@
                 {
                   "icon": "🚀",
                   "title": "Bootloader starts",
-                  "detail": "A small program on that device takes over and loads the real operating system into RAM, handing it control of the machine."
+                  "detail": "A small program on that device takes over, transfers the operating system into RAM, and once that's done, the firmware hands control of the machine over to the OS."
+                }
+              ]
+            },
+            {
+              "type": "matching",
+              "title": "Match the body-analogy to the real component",
+              "pairs": [
+                {
+                  "left": "The Brains",
+                  "right": "CPU"
+                },
+                {
+                  "left": "Short-term Memory",
+                  "right": "RAM"
+                },
+                {
+                  "left": "Skeleton and Nerves",
+                  "right": "Motherboard"
+                },
+                {
+                  "left": "Heart and Lungs",
+                  "right": "PSU"
+                },
+                {
+                  "left": "Visual Cortex",
+                  "right": "GPU"
+                },
+                {
+                  "left": "Long-term Memory",
+                  "right": "HDD / SSD"
                 }
               ]
             }
@@ -186,6 +216,28 @@
               ],
               "answer": 1,
               "explain": "Attacks on firmware/bootloaders (e.g. bootkits) are a real category of attack — that's exactly why this room flags the boot process as important later on."
+            },
+            {
+              "q": "What's the relationship between BIOS and UEFI?",
+              "choices": [
+                "They're unrelated technologies",
+                "UEFI is the modern replacement for BIOS — BIOS does the same job but has mostly been superseded",
+                "BIOS replaced UEFI in modern PCs",
+                "BIOS only exists inside GPUs"
+              ],
+              "answer": 1,
+              "explain": "UEFI (Unified Extensible Firmware Interface) is the modern standard; you'll still hear 'BIOS' used loosely for the same role."
+            },
+            {
+              "q": "Once the bootloader finds the OS on the boot device, where does it transfer the OS before handing over control?",
+              "choices": [
+                "Directly into the GPU",
+                "Into RAM",
+                "Into the PSU",
+                "It doesn't transfer it anywhere — it runs straight off the disk"
+              ],
+              "answer": 1,
+              "explain": "The bootloader moves the OS from storage into RAM; only after that does the firmware hand control over to it."
             }
           ],
           "rawText": "### TryHackMe _ Inside a Computer System.pdf\n\n7/21/26, 9:07 PM TryHackMe | Inside a Computer System\nRoom completed: 100% \nTask 1 Introduction\nTask 2 Inside a Computer System\nNearly every computer system that you can think of includes, in one way or another, the\nsame building blocks. Each part has its own job, and together they make the computer work.\nLet's have a look at each of these building blocks.\nRAM: Short-term\nMotherboard: The Memory PSU: Heart and\nSkeleton and Nerves Lungs:\nCPU: The Brains\nHDD + SSD:\nGPU: Visual Long-term\nMemory\nCortex\nThroughout this task, we will use a very relatable analogy: the human body. The image\nabove shows the different PC components and its human counterpart. To learn more about\neach component, open the \"Static Site\" by clicking on the green \"View Site\" button below.\nThe static site should open in split-screen view.\nView Site\nAnswer the questions below\nGive in the flag you received after completing the exercise on the static site.\nTHM{4llpccomp0n3nts1d3nt1f13d} Correct Answer\n\nhttps://tryhackme.com/room/insideacomputer 1/1\n\n### TryHackMe _ what happen when we press start button.pdf\n\n7/21/26, 9:08 PM TryHackMe | Inside a Computer System\nTask 3 What Happens When You Press the Start Button?\nRoom completed: 100% \nNow that the core components are installed in the computer system, it is time to boot up the system. We can compare this to how we wake up\nin the morning and do a quick check to see if everything is working. Only when everything is OK, do we get up and start our day. The image\nbelow shows the steps a computer system goes through before it shows you a working interface (in the form of an Operating System).\nPress Power Select Boot\nFirmware Starts POST Start Bootloader\nButton Device\nStep 1: Press the Power Button\nWhen we press the power button on our computer system, a signal is sent to the PSU to allow power to flow. Imagine our body being powered\noff when we sleep. Once we wake up and receive oxygen, our body starts pumping blood and boots up.\nStep 2: Firmware starts\nContinuing our analogy from step 1, once the body has started up, our core components are up and running, but our brain is not yet conscious.\nLike our bodies, a computer system contains firmware that allows all its components to start up. The central system that manages this is called\nthe Unified Extensible Firmware Interface (UEFI). Note: We will often see the term BIOS mentioned instead of UEFI. BIOS does the same as\nUEFI, but has mainly been replaced by UEFI\nStep 3: Power-On Self Test\nNow that our body is up and running, it is time to test if everything is functioning as it should. If something isn't, there will be some alarm\nsignals. One of the routines that the UEFI loads is the Power-On Self Test, which tests if every required component is present, configured\ncorrectly, and functioning.\nStep 4: Select Boot Device\nOnce our body is up and running, configured correctly and fully functional, our system searches for the location of our bootup routine to start\nour consciousness. In our computer system the UEFI holds an ordered list which prioritizes on which device to look first for the boot up routine\nfor the Operating System.\nStep 5: Initiate Bootloader\nNow that our system knows the part of our brain where our consciousness is located, it initiates the \"load routine\" to start it. Our computer\nsystems follow a similar process: On the selected boot device, the bootloader is initiated. This bootloader transfers the Operating System from\nthe selected boot device to the Random Access Memory. Once the OS is transferred, the UEFI gives control over the different components to\nthe OS.\nNow that we know how a computer system boots, let's have a little exercise. Open the static site in this task by clicking the green \"Static Site\"\nbutton and follow the instructions to answer the question below.\nView Site\nAnswer the questions below\nWhat is the flag that you received after completing the exercise?\nTHM{pc5ucce55fully5t4rt3d} Correct Answer\nTask 4 Conclusion\nHow likely are you to recommend this room to others?\n1 2 3 4 5 6 7 8 9 10\nSubmit now\n\nhttps://tryhackme.com/room/insideacomputer 1/1"
@@ -198,35 +250,35 @@
           "keyTerms": [
             {
               "term": "Laptop",
-              "def": "Portable, everyday computing — trades raw performance for battery life and mobility."
+              "def": "Portable, everyday computing — trades raw performance for battery life and mobility. Has a screen and keyboard."
             },
             {
               "term": "Desktop",
-              "def": "Stays in one place, uses wall power, better cooling — consistent performance over mobility."
+              "def": "Stays in one place, uses wall power, better cooling — consistent performance over mobility. Has a screen and keyboard."
             },
             {
               "term": "Workstation",
-              "def": "Built for precision and reliability on professional tasks like simulation or 3D rendering."
+              "def": "Built for precision and reliability on professional tasks like simulation or 3D rendering. Has a screen and keyboard."
             },
             {
               "term": "Server",
-              "def": "No screen/keyboard needed — exists to provide services to many users over a network."
+              "def": "No screen or keyboard needed — exists to provide services to many users over a network, running continuously."
             },
             {
               "term": "Smartphone",
-              "def": "Pocket-sized computer optimized for battery life and constant connectivity."
+              "def": "Pocket-sized computer optimized for battery life and constant connectivity — e.g. an iPhone or Android phone."
             },
             {
               "term": "Tablet",
-              "def": "Touch-first computer with a larger screen than a phone, still highly portable."
+              "def": "Touch-first computer with a larger screen than a phone, still highly portable — e.g. an iPad or drawing tablet."
             },
             {
               "term": "IoT device",
-              "def": "Network-connected device with a single purpose — a thermostat, doorbell, or fitness tracker."
+              "def": "Network-connected device with a single purpose — e.g. a thermostat, smart doorbell, or fitness tracker."
             },
             {
               "term": "Embedded computer",
-              "def": "A computer built into another device, often working silently for years unnoticed."
+              "def": "A computer built into another device, often working silently for years unnoticed — e.g. a coffee maker controller, automatic door sensor, or lamp dimmer chip."
             }
           ],
           "interactives": [
@@ -285,6 +337,63 @@
                   "detail": "You touch a phone. You ask a server for information. An IoT device works quietly without demanding attention. There's no single 'best' computer — only the right tool for the job."
                 }
               ]
+            },
+            {
+              "type": "hotspot-diagram",
+              "title": "Spot the hidden computer",
+              "layout": "scatter",
+              "items": [
+                {
+                  "id": "smartphone",
+                  "icon": "📱",
+                  "label": "Smartphone",
+                  "short": "In your pocket",
+                  "detail": "An iPhone or Android phone packs a full computer optimized for battery life and constant connectivity — the most powerful computer most people carry."
+                },
+                {
+                  "id": "tablet",
+                  "icon": "🖊️",
+                  "label": "Tablet",
+                  "short": "Touch-first, bigger screen",
+                  "detail": "An iPad or drawing tablet — a touch-first computer with a larger screen than a phone, still highly portable."
+                },
+                {
+                  "id": "iot",
+                  "icon": "🌡️",
+                  "label": "IoT Device",
+                  "short": "Connected, single-purpose",
+                  "detail": "A thermostat, smart doorbell, or fitness tracker — connects to a network to report data or receive commands."
+                },
+                {
+                  "id": "embedded",
+                  "icon": "🚪",
+                  "label": "Embedded Computer",
+                  "short": "Invisible, everywhere",
+                  "detail": "Sophia walked through automatic doors every day at Nova Labs without realizing a tiny embedded computer inside the door frame was detecting her movement and signaling the motor to open — invisible, reliable, everywhere. Also hides inside coffee maker controllers and lamp dimmer chips, often with zero network connection."
+                }
+              ]
+            },
+            {
+              "type": "flip-cards",
+              "title": "Screen & keyboard? Comparing the 4 types you sit in front of",
+              "cards": [
+                {
+                  "front": "Laptop",
+                  "back": "Screen & Keyboard: Yes. Portable everyday computing — trades performance for battery life."
+                },
+                {
+                  "front": "Desktop",
+                  "back": "Screen & Keyboard: Yes. Sustained performance at a fixed location — wall power and better cooling than a laptop."
+                },
+                {
+                  "front": "Workstation",
+                  "back": "Screen & Keyboard: Yes. Precision and reliability for professional tasks like simulation or 3D rendering."
+                },
+                {
+                  "front": "Server",
+                  "back": "Screen & Keyboard: No. Runs continuously, answering requests from many users at once — no one sits in front of it."
+                }
+              ]
             }
           ],
           "conclusion": "Sophia’s final report began: “I arrived thinking computers had screens and keyboards. I leave knowing they are everywhere, especially where I do not see them.”\n\nIn this room, we covered eight types of computers and learned how decisions are made when choosing one over the others. The most critical computers are not always the fastest or flashiest. Sometimes, they are the silent chips that keep doors opening, planes flying, and coffee machines brewing.",
@@ -332,6 +441,39 @@
               ],
               "answer": 2,
               "explain": "Workstations trade portability for the raw, reliable power professional workloads need."
+            },
+            {
+              "q": "Which of these is a real-world example of an embedded computer rather than an IoT device?",
+              "choices": [
+                "A smart doorbell that sends you phone alerts",
+                "A fitness tracker that syncs to an app",
+                "An automatic door sensor that silently opens a door with no network connection",
+                "A thermostat you control from your phone"
+              ],
+              "answer": 2,
+              "explain": "IoT devices connect to a network; embedded computers, like the sensor in Nova Labs' automatic doors, can work invisibly with no connectivity at all."
+            },
+            {
+              "q": "In the Screen & Keyboard comparison, which of these four types is the only one marked 'No'?",
+              "choices": [
+                "Laptop",
+                "Desktop",
+                "Workstation",
+                "Server"
+              ],
+              "answer": 3,
+              "explain": "Laptops, desktops, and workstations all have a screen and keyboard — a server doesn't need either since no one sits in front of it."
+            },
+            {
+              "q": "Which of these is the clearest real-world example of a smartphone?",
+              "choices": [
+                "A drawing tablet",
+                "An iPhone or Android phone",
+                "A smart doorbell",
+                "A coffee maker controller"
+              ],
+              "answer": 1,
+              "explain": "iPhones and Android phones are the room's named examples of pocket-sized, always-connected smartphones."
             }
           ],
           "rawText": "### TryHackMe _ Computer Types 2.pdf\n\n7/21/26, 9:12 PM TryHackMe | Computer Types\nRoom completed: 100% \nTask 2 Sophiaʼs Summer of Hidden Computers – Month 1\nTask 3 Sophiaʼs Summer of Hidden Computers – Month 2\nBy her second month at Nova Labs, Sophia had started noticing computers she had never interacted with directly. The most powerful\ncomputer most people own fits in their pocket, but millions more hide inside everyday objects: doors, lamps, coffee machines.\nWe continue to find computers hiding in everyday objects:\nType What it is Examples\nPocket-sized computer optimized for battery life and\nSmartphone iPhone, Android phone\nconnectivity\nTablet Touch-first computer with larger screen iPad, drawing tablet\nIoT device Network-connected device with a single purpose Thermostat, smart doorbell, fitness tracker\nEmbedded Coffee maker controller, automatic door sensor, lamp\nComputer built into another device\ncomputer dimmer chip\nIoT vs Embedded: Both can be small and single-purpose. The difference is connectivity. IoT devices connect to a network to report data or\nreceive commands. Embedded computers might not connect to anything; they do their job inside the machine, often for years without anyone\nknowing they exist.\nSophia walked through automatic doors every day at Nova Labs. She never realized that a tiny computer inside the door frame was detecting\nher movement and signaling the motor to open. Thatʼs embedded computing; invisible, reliable, everywhere.\nAnswer the questions below\nWhat is the currently most popular pocket-sized computer?\nsmartphone Correct Answer\nWhat kind of computer would you expect to find in a coffee machine?\nembedded computer Correct Answer\nTask 4 Why Computers Come in Different Flavors\nTask 5 Summary\nHow likely are you to recommend this room to others?\n1 2 3 4 5 6 7 8 9 10\nSubmit now\n\nhttps://tryhackme.com/room/computertypes 1/1\n\n### TryHackMe _ Computer Types 3.pdf\n\n7/21/26, 9:13 PM TryHackMe | Computer Types\nRoom completed: 100% \nTask 4 Why Computers Come in Different Flavors\nSophia asked the question that had been bothering her all summer:\nSophia asked...\nWhy not just build one computer that does everything?\n“Because every design is a trade-off,” replied Gabriel.\nMobility costs power. Smaller, portable computers must sacrifice sustained performance. Reliability costs money. Servers and critical systems\nuse redundancy, such as extra power supplies and disks, to avoid failure.\nPurpose shapes everything. You touch a phone. You ask a server for information. An IoT device works quietly without demanding attention.\nThere is no best computer. There is only the right tool for the job!\nClick the View Site button below, then complete the interactive challenge to get the flag.\nView Site\nAnswer the questions below\nGo through the attached static site and get the flag.\nTHM{8_computer_types} Correct Answer\nTask 5 Summary\nHow likely are you to recommend this room to others?\n\nhttps://tryhackme.com/room/computertypes 1/1\n\n### TryHackMe _ Computer Types.pdf\n\n7/21/26, 9:11 PM TryHackMe | Computer Types\nRoom completed: 100% \nTask 2 Sophiaʼs Summer of Hidden Computers – Month 1\nThe Computers You Sit in Front Of\nDuring her first month at Nova Labs, Sophia learned an important lesson.\nSophia learned that...\n1. Not all computers are meant to move.\n2. Not all computers are meant for people to sit in front of.\nShe was introduced to four types of computers that often look similar but serve very different purposes.\nPortable everyday computing\nSustained performance at a fixed location\nLet's compare these below:\nScreen and\nComputer Type Main Purpose\nKeyboard\nLaptop Yes Portable everyday computing.\nSustained performance at a fixed\nDesktop Yes\nlocation.\nPrecision and reliability for\nWorkstation Yes\nprofessional tasks.\nProviding services to many users over a\nServer No\nnetwork.\nHow Sophia Learned the Difference\nSophia began with a laptop, the computer she already knew best. It was perfect for emails and documents, but when she pushed it with long\ntasks, it slowed down. Gabriel explained that laptops are built to be portable, and staying cool in a small, battery-powered device is difficult.\nNext, she tried a desktop. It stayed in one place, used wall power, and had better cooling. The same task ran smoothly for much longer.\nDesktops are designed for consistency rather than mobility.\nWhen Sophia moved on to professional work, such as simulations and 3D models, Gabriel showed her a workstation. It looked like a desktop,\nbut it was built differently. Workstations prioritize accuracy and reliability, using specialized components to reduce errors during long or\ncomplex computations.\nFinally, Gabriel took her to a room full of machines with no screens at all. These were servers. They ran continuously, answering requests from\nmultiple users simultaneously. Sophia never touched them directly, but they powered the tools she used every day.\nAnswer the questions below\nWhich computer type usually runs without a dedicated screen and keyboard?\nserver Correct Answer\n\nhttps://tryhackme.com/room/computertypes 1/1"
@@ -373,6 +515,22 @@
             {
               "term": "Host",
               "def": "The name of the server you're requesting resources from."
+            },
+            {
+              "term": "DNS",
+              "def": "Domain Name Service — resolves a hostname to a server's IP address, just like a GPS resolves a place name into coordinates."
+            },
+            {
+              "term": "Port",
+              "def": "A number identifying a specific service running on a server — like a specific door for takeaway vs. dine-in vs. delivery at the same restaurant."
+            },
+            {
+              "term": "Protocol",
+              "def": "The shared rules a client and server use to talk: which commands are understood, how a request is structured, what syntax is used, and how faulty requests are handled."
+            },
+            {
+              "term": "RFC",
+              "def": "Request for Comments — the official specification documents that define standards like HTTP, including its 9 core methods."
             }
           ],
           "interactives": [
@@ -392,10 +550,16 @@
                   "detail": "Alice tells Bob what she wants → your browser sends a GET request for a page."
                 },
                 {
+                  "icon": "🧭",
+                  "from": "client",
+                  "title": "DNS resolves the address",
+                  "detail": "Bob only knows the name 'Luigi's Pizza' — he needs an address. Your browser only knows a hostname → DNS resolves it into an IP address, exactly like a GPS turning a place name into coordinates."
+                },
+                {
                   "icon": "🛵",
                   "from": "client",
                   "title": "The request travels",
-                  "detail": "Bob drives to Luigi's → the HTTP request travels over the network to the host's address."
+                  "detail": "Bob drives to Luigi's specific door for takeaway → the HTTP request travels to the host's IP address, on the correct port for that service."
                 },
                 {
                   "icon": "🍕",
@@ -440,6 +604,102 @@
                 {
                   "front": "Status",
                   "back": "Whether the request succeeded — e.g. '200 OK'."
+                }
+              ]
+            },
+            {
+              "type": "hotspot-diagram",
+              "title": "The 9 HTTP methods, defined in the HTTP RFCs",
+              "layout": "scatter",
+              "items": [
+                {
+                  "id": "get",
+                  "icon": "📥",
+                  "label": "GET",
+                  "short": "Read a resource",
+                  "detail": "Retrieves a resource from the server — the most common method, used every time your browser loads a page."
+                },
+                {
+                  "id": "post",
+                  "icon": "📤",
+                  "label": "POST",
+                  "short": "Submit new data",
+                  "detail": "Sends new data to the server, e.g. submitting a form or uploading a file."
+                },
+                {
+                  "id": "put",
+                  "icon": "🔁",
+                  "label": "PUT",
+                  "short": "Replace a resource",
+                  "detail": "Replaces a resource entirely with the data you send."
+                },
+                {
+                  "id": "delete",
+                  "icon": "🗑️",
+                  "label": "DELETE",
+                  "short": "Remove a resource",
+                  "detail": "Asks the server to delete the specified resource."
+                },
+                {
+                  "id": "patch",
+                  "icon": "🩹",
+                  "label": "PATCH",
+                  "short": "Partially update",
+                  "detail": "Applies a partial update to a resource instead of replacing the whole thing."
+                },
+                {
+                  "id": "head",
+                  "icon": "🎩",
+                  "label": "HEAD",
+                  "short": "Headers only",
+                  "detail": "Same as GET but returns only the headers, not the body — useful for checking if a resource exists."
+                },
+                {
+                  "id": "options",
+                  "icon": "❓",
+                  "label": "OPTIONS",
+                  "short": "Ask what's allowed",
+                  "detail": "Asks the server which methods it supports for a given resource."
+                },
+                {
+                  "id": "connect",
+                  "icon": "🔌",
+                  "label": "CONNECT",
+                  "short": "Open a tunnel",
+                  "detail": "Establishes a tunnel to the server, often used to route HTTPS through a proxy."
+                },
+                {
+                  "id": "trace",
+                  "icon": "🪞",
+                  "label": "TRACE",
+                  "short": "Echo the request",
+                  "detail": "Echoes the received request back — mainly used for debugging."
+                }
+              ]
+            },
+            {
+              "type": "matching",
+              "title": "Match the concept to its pizza-delivery analogy",
+              "pairs": [
+                {
+                  "left": "DNS",
+                  "right": "Works like a GPS — turns a name into an address"
+                },
+                {
+                  "left": "Port",
+                  "right": "Works like a specific door — each service has its own"
+                },
+                {
+                  "left": "Protocol",
+                  "right": "Works like a shared language — the rules both sides follow"
+                },
+                {
+                  "left": "Client",
+                  "right": "Alice, the one who starts the order"
+                },
+                {
+                  "left": "Server",
+                  "right": "Luigi's Pizzas, the one who fulfills it"
                 }
               ]
             }
@@ -489,6 +749,50 @@
               ],
               "answer": 1,
               "explain": "GET is the most common method — used every time a browser loads a page."
+            },
+            {
+              "q": "What does DNS do?",
+              "choices": [
+                "Encrypts your traffic",
+                "Resolves a hostname to a server's IP address",
+                "Stores your browsing history",
+                "Compresses web pages"
+              ],
+              "answer": 1,
+              "explain": "DNS works like a GPS for the internet, turning a name like tryhackme.com into an IP address."
+            },
+            {
+              "q": "In the Luigi's takeaway analogy, what does a Port represent?",
+              "choices": [
+                "The pizza itself",
+                "A specific door for a specific service on the same server",
+                "The delivery driver",
+                "The menu"
+              ],
+              "answer": 1,
+              "explain": "Just like Luigi's uses door A for takeaway and door B for dine-in, a single server can run multiple services, each identified by a different port."
+            },
+            {
+              "q": "Which of the following formally defines HTTP's methods and rules?",
+              "choices": [
+                "CSS specifications",
+                "RFC (Request for Comments) documents",
+                "The client's browser settings",
+                "DNS records"
+              ],
+              "answer": 1,
+              "explain": "HTTP is standardized in RFC documents — that's where its 9 core methods are formally defined."
+            },
+            {
+              "q": "Which HTTP method removes a resource from the server?",
+              "choices": [
+                "GET",
+                "POST",
+                "DELETE",
+                "HEAD"
+              ],
+              "answer": 2,
+              "explain": "DELETE is the method that asks the server to remove the specified resource."
             }
           ],
           "rawText": "### TryHackMe _ Client-Server Basics 2.1.pdf\n\n7/21/26, 9:17 PM TryHackMe | Client-Server Basics\nRoom completed: 100% \nTask 3 Web Communication in Practice\nHypertext Transfer Protocol (Secure), abbreviated as HTTP(S), is a stateless client-server protocol used for the World Wide Web. This means that each request is processed independently, without the server retaining information about previous requests.\nAlthough the protocol itself is stateless, modern websites and web applications implement mechanisms to introduce statefulness at the application level.\nFor example, when you log into a website using your credentials, the server creates a session identifier (often stored in a cookie or token) that is sent with each subsequent request.\nWithout these mechanisms, you would need to authenticate again with every new request, because the server would have no memory of your previous login.\nHTTP Commands\nIn the main specifications that define HTTP (also called Request for Comments, or RFC documents), there are 9 core commands. In HTTP lingo, we use the term method instead of command. Below you can see an overview of these methods:\nGET\nPOST\nPUT\nDELETE\nPATCH\nHEAD\nOPTIONS\nCONNECT\nTRACE\nWe will focus on discussing one of the two most common methods used: GET. We will approach this practically by examining the requests a browser sends when you navigate to a website.\nClick on the \"Start Lab Machine\" button below. This will show a new window in split-screen where we can open a website and inspect a GET request. If the split-screen is not showing, click the blue \"Start Split-screen\" button at the top of the room.\nSet up your virtual environment\nTo successfully complete this room, you'll need to set up your virtual environment. This involves starting the Lab Machine, ensuring you're equipped with the necessary tools and access to tackle the challenges ahead.\nLab machine\nStart Lab Machine\nStatus: Off\nGET\nThe GET method is actually pretty straightforward. We can use this method to retrieve a resource from web server. For example, GET https://tryhackme.com/index.php . This request retrieves the TryHackMe website's homepage. You don't need to type in this request yourself. When you open a browser (this is the client) and type \"https://tryhackme.com,\" the browser constructs the message behind the scenes using information you provide and\nother fields defined in the HTTP specifications. When the web server receives the request, it sends a response that includes a status code (Indicating the type of response) and the requested information. The image below shows the flow of this request.\nLet's have a look at an actual GET request and its response. Navigate to the Lab Machine that opened next to this screen, then click the Firefox icon on the Desktop. Once the browser is open, the web page http://httpdemo.local:8080 should show. Proceed by pressing F12 or right-clicking in the browser window and selecting \"Inspect\". This will open the Firefox Developer Tools, which allows us to inspect, debug, and analyze web pages and traffic.\nClick on the \"Network\" tab as shown in the image below.\nNow reload the page by clicking the circular logo highlighted on the image above (next to where you type the URL). You should see multiple GET requests appearing in the Developer Tools window, under the Network tab. Click on the first entry as shown below to see more information.\n\nhttps://tryhackme.com/room/clientserverbasics 1/1\n\n### TryHackMe _ Client-Server Basics 2.2.pdf\n\n7/21/26, 9:18 PM TryHackMe | Client-Server Basics\nRoom completed: 100% \nNow reload the page by clicking the circular logo highlighted on the image above (next to where you type the URL). You should see multiple GET requests appearing in the Developer Tools window, under the Network tab. Click on the first entry as shown below to see more information.\nIn the right-hand panel, we can see more information about our GET request. We won't go into much detail, but let's have a look at some of these fields.\nScheme: Tells us which protocol was used: HTTP or HTTPS.\nHost: Tells us the name of the host we request resources from.\nFilename: Indicates which file we requested from the host. In our request, this is \"/\", which actually translates to \"index.html\".\nAddress: Displays the IP address where the website is hosted. In our example, we are hosting the website on the same device. That's why the address 127.0.0.1 is shown.\nStatus: This field indicates whether the request was successful. In our example, we received a \"200 OK\" status, which means that the request was successful.\nWhen a request is sent, we will get a response from the server. The response is divided into two parts: the response header and the response body. The response header contains metadata about the response, while the response body contains the requested content.\nWe can see this response body by clicking on the \"Response\" tab when displaying the details of a request. In our example, the response contains the index page of the requested website. The image below shows the content in HTML format.\nAnswer the questions below\nWhat would be the host in the following URL? https://www.iamlearning.thm/contact\nwww.iamlearning.thm Correct Answer\nWhat would be the scheme in the following URL? https://www.iamlearning.thm/contact\nhttps Correct Answer\nTask 4 Conclusion\nHow likely are you to recommend this room to others?\n1 2 3 4 5 6 7 8 9 10\nSubmit now\n\nhttps://tryhackme.com/room/clientserverbasics 1/1\n\n### TryHackMe _ Client-Server Basics.pdf\n\n7/21/26, 9:17 PM TryHackMe | Client-Server Basics\n\nClient-Server Basics\nPremium room\nThis room teaches the basics of the Client-Server model.\n60 min 66,834\nShare your achievement Save Room 403 Recommend Connectivity Options\nRoom completed: 100%\nTask 1 Introduction\nTask 2 Pizza Delivery\nOne of the easiest ways to explain how computer systems provide services to other systems is to use an analogy: for example, how shops offer services to their customers. Let's have a look at a pizza takeaway.\nIt's Friday night, and Alice and Bob feel like having pizza. Alice looks at Luigi's Pizza's menu and tells Bob which pizza she wants. Bob takes the car, enters Luigi's address into his GPS, and starts driving. Once Bob arrives, he enters Luigi's and places his order: \"Get me a large pepperoni pizza and a coke.\" The\nemployee acknowledges the order and starts making the pizza. Once the order is ready, Bob returns home and has a lovely pizza night with Alice.\nThis seems like a standard, straightforward process. But don't be fooled. Because we are so used to ordering pizza, we have internalized the process. Let's have a closer look at each step and relate it to how computer systems interact.\nService, Client, Server\nIn our analogy, Bob and Alice choose to use the Pizza takeaway service. Alice is the client who passes her order to Bob, who then passes it to the Server at Luigi's Pizzas. In computer terms, we can translate this as Alice using, for example, a browser to navigate to a website. The browser is the client that requests\nthe webpage, and the server is the system that serves it.\nNote that the client is the one who always initiates the request.\nRequest and Response\nAlice requested a large pepperoni pizza from Luigi's. Be careful, this request was not made to Bob. Bob was the one who brought the request to Luigi's. What is important to realize is that if the request is not formatted correctly or the requested resource is unavailable, we will get an error response. For example,\nBob returns to Alice with the message that there were no pepperoni pizzas or that the server did not understand the order.\nIn computer systems, we can say that Alice used a browser (the client) to request a webpage from a server, which then sent the webpage to the client.\nProtocol\nOne of the things we don't often realize, until we go on a trip to a foreign country, is our language. When Alice formulates her request to Bob, she uses the language Luigi's Pizza understands. Additionally, Alice uses the menu to determine which orders she can place. Bob understood the request (language and\norder) and went to Luigi's to bring it; he received a response he understood and brought it back to Alice.\nWe can compare Bob to a protocol that computer systems use to communicate. A protocol defines how a client can communicate with a server. This definition includes:\nWhich commands do the client and server understand. E.g., the get command.\nHow a request is structured. E.g., first the command and then the order.\nWhat syntax is used. E.g., Alice uses the English language.\nWhat response should be given to which type of request. E.g., a request for pizza results in receiving the available pizza.\nWhat response to give to faulty requests. E.g., the server at Luigi's Pizzas says: No pepereonni pizza available\nPort\nA port is used to identify a specific service running on a system. When a client wants to access a service on a server, it must connect using the correct port.\nImagine that Luigiʼs takeaway service requires customers to enter through a specific door. Everyone ordering takeaway uses the same door. In the same way, a service on a server listens on a specific port.\nNow imagine that Luigiʼs offers multiple services, such as takeaway, dining in, and delivery. Each service uses a different door: door A for takeaway, door B for the restaurant, and door C for delivery. Similarly, a single server can run multiple services at the same time, with each service identified by a different port.\nDNS\nWhen Alice sent Bob her request, only the name of the pizza place was known. With that alone, it is not possible to reach the destination. So, Bob entered Luigi's Pizza into a GPS device, and the device returned the coordinates for Luigi's.\nDNS stands for Domain Name Service and works similarly to GPS: when you enter the name of, for example, a website, DNS resolves it to server's location. These location coordinates are called an Internet Protocol (IP) address in computer terms. Imagine this IP as the address to your home (street name, house\nnumber, postal code, city, and country), but for computer systems.\nLet's look at the next task to see how the client-server model applies when browsing a website.\nAnswer the questions below\nWhat do we use to identify a specific service on a server?\nPort Correct Answer\nWhat do we call the address of a server?\nInternet protocol address Correct Answer\nTask 3 Web Communication in Practice\nTask 4 Conclusion\nHow likely are you to recommend this room to others?\n1 2 3 4 5 6 7 8 9 10\nSubmit now\n\nhttps://tryhackme.com/room/clientserverbasics 1/1"
@@ -505,7 +809,7 @@
             },
             {
               "term": "Hypervisor",
-              "def": "The 'manager' software that creates and runs the virtual machines."
+              "def": "The 'manager' software that creates and runs the virtual machines, and manages their whole lifecycle — start, stop, pause, clone, delete."
             },
             {
               "term": "Virtual Machine (VM)",
@@ -529,7 +833,15 @@
             },
             {
               "term": "Type 2 Hypervisor",
-              "def": "Runs inside an existing OS — easier to install, ideal for learning and small setups."
+              "def": "Runs inside an existing OS — easier to install, ideal for learning and small setups. Tools like Oracle VirtualBox and VMware Workstation are Type 2 hypervisors."
+            },
+            {
+              "term": "Kernel",
+              "def": "The part of an operating system that talks directly to hardware and manages resources like memory and running programs — containers share the host's kernel instead of bringing their own."
+            },
+            {
+              "term": "Docker",
+              "def": "The most common open-source platform for building, deploying, and running containers."
             }
           ],
           "interactives": [
@@ -564,7 +876,7 @@
                   "icon": "📦",
                   "label": "Apps / Containers",
                   "short": "What actually runs",
-                  "detail": "The website, database, or service you actually care about — running inside a VM, or even more lightweight, inside a container that shares the host OS."
+                  "detail": "The website, database, or service you actually care about — running inside a VM, or even more lightweight, inside a container that shares the host OS's kernel."
                 }
               ]
             },
@@ -581,12 +893,85 @@
                   "right": "Type 1 — runs directly on hardware"
                 },
                 {
+                  "left": "Database Server",
+                  "right": "Type 1 — runs directly on hardware"
+                },
+                {
                   "left": "Testing Malicious Files",
+                  "right": "Type 2 — runs inside a host OS, easy to isolate/reset"
+                },
+                {
+                  "left": "Software Testing",
                   "right": "Type 2 — runs inside a host OS, easy to isolate/reset"
                 },
                 {
                   "left": "Kali Linux for learning",
                   "right": "Type 2 — easy to install, ideal for learning"
+                }
+              ]
+            },
+            {
+              "type": "flip-cards",
+              "title": "The 8 benefits of virtualization",
+              "cards": [
+                {
+                  "front": "Cost savings",
+                  "back": "Fewer physical servers to buy, power, cool, and house."
+                },
+                {
+                  "front": "Better resource usage",
+                  "back": "Multiple VMs share one machine instead of each app getting its own underused server — some servers sat at just 5-20% usage before virtualization."
+                },
+                {
+                  "front": "Safe testing",
+                  "back": "Isolate a VM to test malicious files or risky changes without endangering the host machine."
+                },
+                {
+                  "front": "Faster deployment",
+                  "back": "Spinning up a new VM takes minutes, not the days or weeks needed to buy and rack a new physical server."
+                },
+                {
+                  "front": "Flexibility",
+                  "back": "Resize a VM's CPU, memory, or storage on demand instead of buying new hardware."
+                },
+                {
+                  "front": "Portability",
+                  "back": "A VM or container image can move between hosts and run consistently anywhere."
+                },
+                {
+                  "front": "Scalability",
+                  "back": "Add more VMs or containers as demand grows, without buying new physical hardware."
+                },
+                {
+                  "front": "Centralized Management",
+                  "back": "A single tool like a Virtualization Manager lets you monitor and control every VM and host from one dashboard."
+                }
+              ]
+            },
+            {
+              "type": "step-flow",
+              "title": "A day managing AutoGalo's VMs",
+              "mode": "sequence",
+              "steps": [
+                {
+                  "icon": "🚨",
+                  "title": "Mail-SERVER goes down",
+                  "detail": "Everyone at AutoGalo stops receiving email. The Mail-SERVER lab machine is found sitting in an Error state inside the Virtualization Manager."
+                },
+                {
+                  "icon": "🔁",
+                  "title": "A restart fixes it",
+                  "detail": "Restarting the Mail-SERVER VM brings it back to a healthy running state — no more errors."
+                },
+                {
+                  "icon": "🆕",
+                  "title": "Create Marketing-VM",
+                  "detail": "The marketing team needs a VM for their website: 4 CPU cores, 8GB memory, 100GB disk. Created in seconds — no new hardware to buy."
+                },
+                {
+                  "icon": "📊",
+                  "title": "Check host capacity",
+                  "detail": "HV-PROD-01 still has room for more VMs. HV-PROD-02 is almost at 100% capacity — worth flagging to the manager. HV-BACKUP-01 is disconnected and hosts nothing."
                 }
               ]
             }
@@ -647,9 +1032,323 @@
               ],
               "answer": 2,
               "explain": "The benefits covered are cost savings, better resource usage, safe testing, faster deployment, flexibility, portability, scalability, and centralized management — internet speed isn't one of them."
+            },
+            {
+              "q": "What does the kernel do, and why does it matter for containers?",
+              "choices": [
+                "It's a cooling component; irrelevant to containers",
+                "It's the part of the OS that talks to hardware and manages resources — containers share the host's kernel instead of bringing their own",
+                "It's a type of hypervisor",
+                "It only exists inside VMs, never on the host"
+              ],
+              "answer": 1,
+              "explain": "Because containers share the host's kernel rather than running a full OS, they start faster and use fewer resources than VMs — but must match the host's OS type."
+            },
+            {
+              "q": "What is Docker?",
+              "choices": [
+                "A hardware brand for servers",
+                "The most common open-source platform for building, deploying, and running containers",
+                "A type of Type 1 hypervisor",
+                "A cloud storage service"
+              ],
+              "answer": 1,
+              "explain": "Docker is the easiest way to deploy containers in a VM — an open-source platform built around containerization."
+            },
+            {
+              "q": "In the AutoGalo scenario, what specs were used to create the Marketing-VM?",
+              "choices": [
+                "2 CPU cores, 4GB memory, 50GB disk",
+                "4 CPU cores, 8GB memory, 100GB disk",
+                "8 CPU cores, 16GB memory, 200GB disk",
+                "1 CPU core, 2GB memory, 20GB disk"
+              ],
+              "answer": 1,
+              "explain": "The Marketing-VM was created with 4 CPU cores, 8GB memory, and a 100GB disk to host the marketing team's website."
             }
           ],
           "rawText": "### TryHackMe _ Virtualisation Basics 2.pdf\n\n7/21/26, 9:21 PM TryHackMe | Virtualisation Basics\nRoom progress: 30% \nTask 2 Virtualization Overview\nBefore the concept of virtualization, the rule of thumb in IT was:\n“One server = one application.”\nIn the early days, digital services were run on physical machines, and each machine typically had a single, clear purpose, such as hosting a website or storing data. As businesses added more services, they naturally increased the number of physical servers, and the “one job per box” approach became the\nstandard for building reliable systems.\nThis meant that if a company wanted to run a website, a database, an email service, and an internal app, they would need separate physical servers for each one. The problems were obvious:\nHigh cost: Buying multiple physical servers is expensive, not just the hardware, but also electricity, cooling, maintenance, and data center space.\nLow utilization: Most applications donʼt use the serverʼs full capacity. Many servers stayed at 5–20% usage, wasting CPU, memory, and storage resources.\nSlow deployment: Setting up new physical servers could take days or weeks.\nHard to scale: If an application suddenly needed more resources, you often had to buy yet another server.\nIn short, companies were paying a lot for hardware that wasnʼt being fully utilized.\nThe Need for Sharing Hardware Safely and Efficiently\nVirtualization introduced a new idea:\n“What if multiple applications could share the same physical server safely?”\nA virtualization layer, called a hypervisor, was introduced to act as a referee between lab machines and allow each virtual computer to behave independently, like a physical computer.\nThe Building Analogy\nImagine if one single person lives alone in an entire 10-floor building:\nThe person uses only one floor but must maintain the entire building: electricity, cleaning, water, and security.\nMost of the building stays empty and wasted.\nItʼs expensive, inefficient, and unnecessary for his needs.\nNow imagine dividing the building into separate apartments:\nEach apartment has its own door, walls, kitchen, and privacy.\nDifferent people can live independently without bothering each other.\nThey all share the buildingʼs main structure: electricity, water, and elevators, making it cheaper and more efficient for everyone.\nThis is virtualization:\nThe building = the physical server\nThe apartments = lab machines\nThe tenants = applications or operating systems\nThe building manager = the hypervisor (the software that divides the building safely)\nEach virtual computer, known as a Lab Machine (VM), acts as an independent system with its own operating system, apps, and settings, even though they all share the same physical hardware underneath.\nAnswer the questions below\nWhat does virtualization enable multiple applications to share?\nphysical server Correct Answer\nWhat is the name of the software that manages the resources for each lab machine?\nhypervisor Correct Answer\nTask 3 Virtualization Components\nTask 4 Managing Virtual Machines\nTask 5 Conclusion\nHow likely are you to recommend this room to others?\n1 2 3 4 5 6 7 8 9 10\n\nhttps://tryhackme.com/room/virtualisationbasics 1/1\n\n### TryHackMe _ Virtualisation Basics 3.pdf\n\n7/21/26, 9:22 PM TryHackMe | Virtualisation Basics\nRoom progress: 30% \nTask 2 Virtualization Overview\nTask 3 Virtualization Components\nHypervisor (The Building Manager)\nA hypervisor is the core technology behind virtualization. It's the software that creates and manages lab machines.\nIt is a special piece of software that:\nDivides a physical computer into multiple virtual ones.\nGives each lab machine its own share of CPU, memory, and storage.\nKeeps everything isolated and safe.\nManages the lifecycle of lab machines (start, stop, pause, clone, delete).\nHypervisors have two main types of implementation, each of which is used for specific scenarios, from home labs to large data centers:\nType 1 hypervisors run directly on the physical hardware, making them fast, efficient, and ideal for servers and professional environments.\nType 2 hypervisors run within an existing operating system, making them easier to install and ideal for learning, testing, or small setups.\nBelow is a table showing which use case is best suited to each hypervisor type. The use cases can run on both hypervisor types, but it's not the best approach given the main objectives of each.\nUse Case Type 1 Type 2\nTest Malicious Files X\nProduction Server X\nDatabase Server X\nSoftware Testing X\nKali Linux X\nData Center X\nWhen using virtualization to test malicious files, care should be taken to ensure that the host machine does not become infected by the malware being tested in the guest machine. One approach is to use different operating systems for the guest and host machines, or to isolate the guest machine so that it does\nnot communicate with the host.\nLab Machines (The Apartments)\nA Lab Machine (VM) is a virtual computer created by the hypervisor.\nEven though itʼs virtual, it behaves as a real machine:\nIt has its own virtual CPU, RAM, storage, and network.\nIt can run any operating system (Windows, Linux, etc.).\nItʼs completely isolated from other VMs. This means that if one VM breaks, the others continue to work.\nYou can deploy VMs on your own computer using tools such as Oracle VirtualBox and VMware Workstation. This type of software acts as a type 2 hypervisor and lets you run multiple operating systems, such as Windows, Linux, and macOS.\nSince you have learned what a hypervisor and VM are, let's take some examples where you might need them:\nYou need to work on a different OS like Kali Linux, but you can't buy another whole system, so you install a hypervisor and run a Kali Linux VM on it.\nYou want to test whether a file is malicious, so you set up an isolated lab machine to protect your main computer from being infected.\nContainers (The Rooms Inside the Apartment)\nA container is a lightweight, isolated environment that runs a single application and all the necessary components to support it. Instead of bringing a whole separate operating system, a container borrows the core of the existing system by running on the kernel, which is the part of an operating system that\ncommunicates with the hardware and manages resources such as memory and running programs.\nBecause containers share this kernel, they start quickly and use fewer resources than full lab machines, but it also means they must match the host systemʼs type. For example, you canʼt run a Windows container on a Linux machine.\nContainers behave like small, self-contained spaces because:\nThey package the application and its dependencies (libraries, tools, versions).\nThey share the hostʼs operating system, so they start almost instantly.\nThey remain isolated from each other, so a misbehaving container doesnʼt affect the others.\nThey can run consistently on any machine, making them perfect for development, testing, and scalable deployments.\nThe easiest way to deploy containers in a VM is using Docker.\nDocker is an open-source software platform that simplifies the process of building, deploying, and running applications using containerization.\nThe image below illustrates the relationship between Hypervisors, VMs, and containers:\nIn summary, VMs provide the “full apartment” with maximum separation and flexibility, while containers offer lightweight “rooms” ideal for scalable, fast-deploying applications.\nAnswer the questions below\nSuppose a user wants to deploy a study lab on their machine to practice some exercises for a cyber security certification. Which type of hypervisor will they use?\n____ _ Check\nSuppose a company wants to host multiple small applications in the same lab machine. What should they use?\n__________ Check\nTask 4 Managing Virtual Machines\nTask 5 Conclusion\nHow likely are you to recommend this room to others?\n1 2 3 4 5 6 7 8 9 10\nSubmit now\n\nhttps://tryhackme.com/room/virtualisationbasics 1/1\n\n### TryHackMe _ Virtualisation Basics 4.1.pdf\n\n7/21/26, 9:23 PM TryHackMe | Virtualisation Basics\nRoom progress: 30% \nTask 4 Managing Virtual Machines\nAfter learning about virtualization, you were hired to be responsible for the virtual environment for AutoGalo, a company that has recently started using lab machines.\nIn this company, they use an application called Virtualization Manager. This application provides a clear view of the overall status of an entire virtualization environment, providing details of each virtualized instance and the physical hosts. It also enables you to run actions and manage the VMs you create.\nYour manager has asked you to investigate an issue with the email service. Essentially, everyone in the company stopped receiving emails today, and no one knows what happened.\nOpen the Virtualization Manager site by clicking the View Site button below, and let's investigate!\nView Site\nAnalyzing Lab Machine States\nIn the home screen, you should see three main sections:\nSummary: Provides a generic view of the state of the environment.\nLab Machines: Provides details of each VM and enables you to run actions on them.\nHosts: Displays usage and performance details for each physical server.\nGo to the Lab Machines section and look for the VM with the name Mail-SERVER :\nLooks like this lab machine has entered an Error state. Let's try rerunning this VM using the Blue Square Button to restart it.\nAfter running again, it appears to be working correctly, with no errors!\nCreating a Lab Machine\nAs part of your routine, you create lab machines for other teams. After resolving the email server issue, you received a task to create a VM to support the marketing team's website.\nNow, let's create a VM to host their marketing website. In the Lab Machines section, locate the + Create VM button on the top right side of the Lab Machines section and click on it.\nYou should fill out the form with how much hardware your lab machine will be using:\nName: Marketing-VM\nCPU Cores: 4\nMemory (GB): 8\nDisk Size (GB): 100\nThen click on Create VM\nNow, at the top of the list of Lab Machines, you should see your created VM:\nAnalyzing Hardware Usage\nAnother routine task you have is to manage the health of the physical servers and report status to your manager. Go to the Hosts section at the bottom of the page:\nBy analyzing it, we can identify:\nHV-PROD-01 has the capacity to host more VMs.\nHV-PROD-02 is almost operating at 100% of its capacity, and we might need to report this!\nHV-BACKUP-01 is disconnected and does not host any VMs.\n\nhttps://tryhackme.com/room/virtualisationbasics 1/1\n\n### TryHackMe _ Virtualisation Basics 4.2.pdf\n\n7/21/26, 9:24 PM y TryHackMe | Virtualisation Basics\nRoom progress: 30% \nNow, answer the following task questions to conclude your shift as the responsible for virtualization in AutoGalo!\nAnswer the questions below\nWhat is the name of the lab machine that has been running for the longest time?\n______________ Check\nWhat is the name of the lab machine that is using the biggest amount of memory?\n_____________ Check\nHow many VMs are in the running state after you solved the issue on `Mail-SERVER`?\n_ Check\nWhat is the name of the physical machine that is hosting most of the VMs?\n__________ Check\nTask 5 Conclusion\nHow likely are you to recommend this room to others?\n1 2 3 4 5 6 7 8 9 10\nSubmit now\n\nhttps://tryhackme.com/room/virtualisationbasics 1/1\n\n### TryHackMe _ Virtualisation Basics.pdf\n\n7/21/26, 9:20 PM TryHackMe | Virtualisation Basics\nRoom progress: 30% \nTask 1 Introduction\nIn previous rooms, you learned what the components of a computer are and how they communicate with each other. In this room, you will\nlearn how companies have optimized these computer components to reduce costs and build flexible, scalable systems that power the modern\ninternet through a concept known as virtualization.\nHave you ever considered how expensive and inefficient it would be if every piece of software or every website required its own physical\nserver?\nVirtualization was created to solve exactly this problem.\nYour manager asked for help on improving the hardware utilization of a computer that hosts a website. Let's explore the concept of\nvirtualization and help your manager!\nLearning Objectives\nUnderstand why managing applications on individual physical servers is inefficient.\nLearn how virtualization addresses hardware utilization and scalability challenges.\nUnderstand the components of a lab machine.\nLearn how containers have further optimized hardware utilization for applications.\nPrerequisites\nBefore you start, we recommend that you complete the following rooms:\nInside a Computer System (coming soon)\nComputer Types (coming soon)\nClient-Server Basics (coming soon)\nAnswer the questions below\n\nhttps://tryhackme.com/room/virtualisationbasics 1/1"
+        },
+        {
+          "id": "5-cloud-computing-fundamentals",
+          "title": "Cloud Computing Fundamentals",
+          "summary": "Why almost nothing you use today lives on one computer anymore — and how renting resources over the internet changed the rules.",
+          "intro": "Your laptop can't serve users on the other side of the world without lag, and it definitely can't grow the moment your app goes viral. Cloud computing solves that by letting you rent computing power over the internet instead of owning every server yourself.",
+          "keyTerms": [
+            {
+              "term": "Cloud Computing",
+              "def": "Using computing resources — servers, storage, networking — over the internet instead of running everything on your own machine."
+            },
+            {
+              "term": "IaaS",
+              "def": "Infrastructure as a Service. Rent the basic building blocks (servers, storage, network); you manage the OS and app yourself."
+            },
+            {
+              "term": "PaaS",
+              "def": "Platform as a Service. The provider manages infrastructure and OS; you just build, deploy, and run your app."
+            },
+            {
+              "term": "SaaS",
+              "def": "Software as a Service. A ready-to-use application over the internet — the provider manages everything, you just log in."
+            },
+            {
+              "term": "Public Cloud",
+              "def": "Shared infrastructure open to anyone — affordable, scalable, no hardware to manage."
+            },
+            {
+              "term": "Private Cloud",
+              "def": "Dedicated infrastructure for one organization — more control, customization, and compliance for sensitive data."
+            },
+            {
+              "term": "Hybrid Cloud",
+              "def": "A mix of public and private clouds working together, e.g. keeping data private while scaling publicly."
+            },
+            {
+              "term": "EC2",
+              "def": "Amazon's virtual servers — created, resized, and destroyed on demand."
+            },
+            {
+              "term": "Instance Type",
+              "def": "Describes how powerful a virtual server is (e.g. t2, t3, m5) — bigger instance types mean more CPU/RAM but higher cost."
+            },
+            {
+              "term": "Region",
+              "def": "A geographical location where your cloud resources live, e.g. Europe or North America."
+            },
+            {
+              "term": "Major Cloud Vendors",
+              "def": "AWS is the industry leader; other major vendors include Microsoft Azure, Google Cloud Platform (GCP), Alibaba Cloud, IBM Cloud, and Oracle Cloud, each with different specialties."
+            }
+          ],
+          "interactives": [
+            {
+              "type": "hotspot-diagram",
+              "title": "Renting a place to live: IaaS vs PaaS vs SaaS",
+              "layout": "stack",
+              "items": [
+                {
+                  "id": "iaas",
+                  "icon": "🏗️",
+                  "label": "IaaS",
+                  "short": "Renting empty land",
+                  "detail": "You get the raw plot — servers, storage, networking. Building the house (installing the OS, configuring, running your app) is entirely on you."
+                },
+                {
+                  "id": "paas",
+                  "icon": "🏠",
+                  "label": "PaaS",
+                  "short": "Renting an unfurnished apartment",
+                  "detail": "Walls, plumbing, and electricity (infrastructure + OS) are already handled by the provider. You just move your furniture in — build, deploy, and run your app."
+                },
+                {
+                  "id": "saas",
+                  "icon": "🏨",
+                  "label": "SaaS",
+                  "short": "Renting a furnished hotel room",
+                  "detail": "Everything is done for you. You just walk in and use it — like opening Gmail or Zoom in a browser."
+                }
+              ]
+            },
+            {
+              "type": "matching",
+              "title": "Match the cloud deployment type to who'd use it",
+              "pairs": [
+                {
+                  "left": "Startup launching a public app",
+                  "right": "Public Cloud — affordable, scales instantly, no infrastructure to manage"
+                },
+                {
+                  "left": "Bank / healthcare / government",
+                  "right": "Private Cloud — control, customization, compliance for sensitive data"
+                },
+                {
+                  "left": "E-commerce site during a sale spike",
+                  "right": "Hybrid Cloud — keeps sensitive data private while scaling publicly on demand"
+                }
+              ]
+            },
+            {
+              "type": "step-flow",
+              "title": "How servers evolved to the cloud",
+              "mode": "sequence",
+              "steps": [
+                {
+                  "icon": "🖥️",
+                  "title": "Physical Servers",
+                  "detail": "One dedicated machine per application — expensive, slow to scale, and often sitting at low utilization."
+                },
+                {
+                  "icon": "🧩",
+                  "title": "Virtualization",
+                  "detail": "A hypervisor splits one physical machine into many isolated VMs, so multiple applications finally share hardware safely."
+                },
+                {
+                  "icon": "📦",
+                  "title": "Containers",
+                  "detail": "Lighter-weight than VMs — apps package with just what they need and share the host's kernel, so they start almost instantly."
+                },
+                {
+                  "icon": "☁️",
+                  "title": "Cloud",
+                  "detail": "Virtualization, containers, and automation combine into on-demand, pay-as-you-go infrastructure you rent over the internet instead of own."
+                }
+              ]
+            },
+            {
+              "type": "step-flow",
+              "title": "Deploy and optimize an AWS environment",
+              "mode": "sequence",
+              "steps": [
+                {
+                  "icon": "🌍",
+                  "title": "Pick a region",
+                  "detail": "Choose the geographical location where your resources will live, e.g. Europe or North America."
+                },
+                {
+                  "icon": "🖥️",
+                  "title": "Create application-interface",
+                  "detail": "A t3.micro EC2 instance to host the app itself — small and cheap, since it's just serving the interface."
+                },
+                {
+                  "icon": "🧪",
+                  "title": "Create two study machines",
+                  "detail": "study-machine-1 and study-machine-2, both m5.large — more powerful instances for users to practice cyber security skills on."
+                },
+                {
+                  "icon": "💵",
+                  "title": "Check the Billing section",
+                  "detail": "See exactly how much each instance is costing — the two powerful study machines are driving most of the cost."
+                },
+                {
+                  "icon": "⏸️",
+                  "title": "Stop unused study machines",
+                  "detail": "Since users haven't started yet, stop study-machine-1 and study-machine-2. Billing drops considerably — you only pay for what's running."
+                }
+              ]
+            },
+            {
+              "type": "flip-cards",
+              "title": "Major cloud vendors",
+              "cards": [
+                {
+                  "front": "AWS",
+                  "back": "Industry leader — the most extensive service offerings and global reach."
+                },
+                {
+                  "front": "Microsoft Azure",
+                  "back": "Strong competitor, especially in enterprise and hybrid cloud environments."
+                },
+                {
+                  "front": "Google Cloud Platform (GCP)",
+                  "back": "Known for powerful data analytics, AI, and machine learning tools."
+                },
+                {
+                  "front": "Alibaba Cloud",
+                  "back": "A major player in Asia, offering competitive cloud services globally."
+                },
+                {
+                  "front": "IBM Cloud",
+                  "back": "Focuses on hybrid cloud and AI-driven solutions for businesses."
+                },
+                {
+                  "front": "Oracle Cloud",
+                  "back": "Focuses on enterprise applications and databases."
+                }
+              ]
+            }
+          ],
+          "conclusion": "In this room, you explored the core ideas behind cloud computing and how it enables flexible, scalable, and cost-effective access to computing resources.\n\nKey Terminology\nLet's quickly review some concepts we learned in this room:\n\nPublic Cloud: Cloud services you access over the internet that many people and companies share.\nPrivate Cloud: A cloud built just for one company, so they have more control and security.\nHybrid Cloud: A mix of public and private clouds that can work together and share data.\nIaaS: A service where you rent basic computer parts like servers and storage from the cloud.\nPaaS: A service that gives you a ready-to-use environment to build and run apps without managing servers.\nSaaS: Software you use online without installing anything, like Gmail or Zoom.\nEC2: Amazon's cloud computers that you can quickly create, use, and resize whenever you need them.\nWe also concluded that the key benefits of cloud computing are:\n\nScalability\nOn-demand self-service\nPay only for what you use\nSecurity\nHigh availability\nGlobal access\nFurther Learning\nYou are now ready to explore the next key area: Operating Systems. In the Operating Systems Introduction room, you will learn how OS components manage hardware, processes, memory, and security. This knowledge is essential for understanding how cloud systems run applications behind the scenes!",
+          "quiz": [
+            {
+              "q": "What's the main advantage of the cloud over hosting an app on a single personal computer?",
+              "choices": [
+                "It's always completely free",
+                "It can scale on demand and stay reachable worldwide without you owning the hardware",
+                "It removes the need for any code",
+                "It only works for gaming"
+              ],
+              "answer": 1,
+              "explain": "The cloud lets your app grow, shrink, and stay available globally by renting shared infrastructure instead of being limited to one machine."
+            },
+            {
+              "q": "In the 'renting a place to live' analogy, which service model is like renting a furnished hotel room where everything is already done for you?",
+              "choices": [
+                "IaaS",
+                "PaaS",
+                "SaaS",
+                "None of these"
+              ],
+              "answer": 2,
+              "explain": "SaaS hands you a complete, ready-to-use application — the provider manages the infrastructure, OS, and the app itself."
+            },
+            {
+              "q": "Why would a bank most likely choose a Private Cloud over a Public Cloud?",
+              "choices": [
+                "Private clouds are always cheaper",
+                "Private clouds offer more control, customization, and compliance for sensitive data",
+                "Public clouds cannot be used by banks at all",
+                "There's no real difference between them"
+              ],
+              "answer": 1,
+              "explain": "Organizations handling sensitive data often need the extra control and compliance guarantees a dedicated private cloud provides."
+            },
+            {
+              "q": "What does an EC2 instance represent in AWS?",
+              "choices": [
+                "A billing plan",
+                "A virtual computer/server you can create, resize, and destroy on demand",
+                "A type of database",
+                "A physical data center"
+              ],
+              "answer": 1,
+              "explain": "EC2 (Elastic Compute Cloud) is AWS's virtual server offering — just like a real computer, it has CPU and RAM and can run applications."
+            },
+            {
+              "q": "Which of these is NOT one of the cloud benefits covered in this room?",
+              "choices": [
+                "Scalability",
+                "Pay only for what you use",
+                "Guaranteed permanent hardware ownership",
+                "High availability"
+              ],
+              "answer": 2,
+              "explain": "The cloud's whole point is that you don't need to own permanent hardware — you rent resources on-demand instead."
+            },
+            {
+              "q": "What comes right after Virtualization in the evolution from physical servers to the cloud?",
+              "choices": [
+                "Cloud",
+                "Containers",
+                "Physical Servers",
+                "Nothing — Virtualization was the last step"
+              ],
+              "answer": 1,
+              "explain": "The order is Physical Servers → Virtualization → Containers → Cloud."
+            },
+            {
+              "q": "In the AWS deployment scenario, why did stopping the study machines reduce the bill?",
+              "choices": [
+                "It permanently deleted all data",
+                "Cloud billing charges for running instances — stopping unused ones means you stop paying for them",
+                "AWS gives a discount for stopping machines",
+                "It has no effect on billing"
+              ],
+              "answer": 1,
+              "explain": "Pay-as-you-go billing means cost tracks what's actually running — stopping the idle study machines immediately cut the bill."
+            },
+            {
+              "q": "Which cloud vendor is specifically known for its strength in data analytics, AI, and machine learning tools?",
+              "choices": [
+                "Oracle Cloud",
+                "IBM Cloud",
+                "Google Cloud Platform (GCP)",
+                "Alibaba Cloud"
+              ],
+              "answer": 2,
+              "explain": "GCP is called out specifically for its data analytics, AI, and machine learning strengths."
+            }
+          ],
+          "rawText": "### TryHackMe _ Cloud Computing Fundamentals 2.pdf\n\n7/22/26, 2:53 PM TryHackMe | Cloud Computing Fundamentals\nRoom progress: 0% \nTask 2 Cloud Computing Overview\nCloud computing is the perfect solution for the challenges in the application youʼve designed, such as moving your files from a single laptop to online storage that you can access anywhere. Instead of running your app on one computer in one country, the cloud lets you use computing resources over the internet.\nThis makes your application easier to access, more reliable, and ready to grow as more students start using it.\nHow Servers Evolved to Cloud\nBefore we start diving into cloud details, itʼs helpful to understand that cloud computing did not appear suddenly. It is the result of many years of changes in how servers were used and managed. At each step, businesses looked for ways to reduce costs, use resources more efficiently, and make their applications\neasier to run and scale. The timeline below shows this evolution, from physical servers to the cloud we use today:\nCloud Benefits and Characteristics\nAfter seeing how applications evolved from physical servers to the cloud, it's becoming clear why cloud computing is so widely used today. The cloud was designed to address common problems, including limited capacity, high costs, and slow growth.\nThe following benefits and characteristics explain how cloud computing makes applications easier to run, scale, and manage:\nScalability: Easily scale up or down as your application's needs change.\nOn-demand self-service: Create or remove servers and storage instantly, without waiting for hardware.\nPay only for what you use: You are charged based on usage, not upfront costs.\nSecurity: Cloud providers protect the infrastructure with strong security measures.\nHigh availability: Applications keep running even if part of the system fails.\nGlobal access: Your application can be accessed by users anywhere in the world.\nIn simple terms, the cloud enables IT resources to be flexible, cost-effective, and easier to manage.\nTypes of Cloud\nThe flexibility provided by cloud computing allows applications to be run in different ways, depending on your needs and level of control. Because of this, cloud providers offer multiple models for deploying and using applications, each suited to different scenarios.\nLetʼs start with the deployment types you can choose for a cloud environment:\nPublic Cloud: Used by startups, websites, and global apps because it is affordable, easy to scale, and requires no infrastructure management. Public cloud services are preferable for nearly every use case.\nPrivate Cloud: Used by banks, healthcare, and government organizations because it offers greater control, customization, and compliance for sensitive data.\nHybrid Cloud: Used by companies like e-commerce platforms that need to keep sensitive data private while still scaling publicly during high demand.\nJust like there are different ways to deploy a cloud environment, there are also different ways to use cloud services. Depending on your experience and needs, you can choose the level of responsibility that fits your application.\nLetʼs look at the main cloud service models:\nInfrastructure as a Service (IaaS): You rent basic computing resources such as virtual servers, storage, and networking. You are responsible for managing the operating system and your application, while the provider manages the physical hardware.\nPlatform as a Service (PaaS): The cloud provider manages the infrastructure and the operating system. You focus on building, deploying, and running your application without worrying about servers.\nSoftware as a Service (SaaS): You use a complete application over the internet. The provider manages everything, and you access the software through a browser or app, for example, Gmail or Zoom.\nThink of cloud service models like different ways of renting a place to live:\nMajor Cloud Vendors\nThere are several cloud vendors offering a variety of services, but Amazon Web Services (AWS) is the industry leader, with the most extensive offerings and global reach. Other well-known cloud providers include:\nMicrosoft Azure: A strong competitor, especially in enterprise and hybrid cloud environments.\nGoogle Cloud Platform (GCP): Known for powerful data analytics, AI, and machine learning tools.\nAlibaba Cloud: A major player in Asia, offering competitive cloud services globally.\nIBM Cloud: Focuses on hybrid cloud and AI-driven solutions for businesses.\nOracle Cloud: Focuses on enterprise applications and databases.\nEach of these vendors offers a range of services, but AWS remains the most popular due to its vast infrastructure and support for businesses of all sizes.\nHow Companies Are Using the Cloud\nNetflix runs its entire platform on AWS so it can scale globally, stay online during peak demand, and stream content reliably to millions of users at once.\nSpotify uses the cloud to handle millions of songs and users, scaling quickly when new music or features are released.\nInstagram relies on the cloud to store massive amounts of photos and videos and deliver them fast to users around the world.\nOnline stores use the cloud to handle traffic spikes during black friday without buying permanent infrastructure.\nThese companies use the cloud because it lets them scale easily, reduce costs, stay reliable, and focus on improving their products instead of managing hardware.\nNext, youʼll apply these same ideas by deploying your cyber security training app in a simulated cloud environment!\nAnswer the questions below\nWhat is the characteristic of cloud environments that enables you to handle an unexpected increase in access to your application?\n\nCh k\nhttps://tryhackme.com/room/cloudcomputingfundamentals 1/1\n\n### TryHackMe _ Cloud Computing Fundamentals 3.pdf\n\n7/22/26, 2:54 PM TryHackMe | Cloud Computing Fundamentals\nRoom progress: 0% \nTask 3 Deploying a Cloud Instance\nSo far, youʼve learned what cloud computing is and why companies use it. Now itʼs time to see those ideas in action by deploying a cloud environment to launch your cyber security app training!\nIn this exercise, youʼll use a cloud interface similar to the AWS platform. The goal is not to memorize buttons, but to understand how cloud resources are easily created and managed in a real-world scenario.\nOpen the Cloud Console site by clicking the View Site button below, and let's create your cloud environment!\nView Site\nBasic Cloud Terminology\nTo complete this exercise, you only need to understand a few basic concepts from AWS:\nEC2 (Virtual Computer / Server): EC2 represents a virtual computer in the cloud. Just like a real computer, it has a CPU and memory (RAM) and can run applications. Whenever you add an EC2 instance, you are adding a computer to your environment.\nInstance Type (for example: t2, t3, m5): Instance types describe how powerful the virtual computer is. Some have more CPU and RAM and are therefore more expensive. You choose the Instance Type based on your needs, knowing that:\nBigger instances = more power + higher cost\nMinor instances = less power + lower cost\nDeploying Your Environment\nYou will create three virtual computers (EC2 instances) to host your cyber security training application. This aligns with the Infrastructure as a Service (IaaS) model you previously learned, as cyber security practices often require full access to the operating system. This allows you to install tools, configure the system, and safely simulate attacks and defenses, just like in real-world environments!\nPicking a Region\nFirst, you need to choose a region where your resources will live. You can do it in the top right of your screen:\nA region represents a geographical location, for example, Europe or North America.\nCreating Lab Machines\nNow, go to the Create Lab Machine block on the right side of the page to create the lab machines for your application.\nFirst, let's create your application interface machine. Set the following configuration:\nInstance Name: application-interface\nInstance Type: t3.micro\nStatus: running\nNow, let's create two testing computers for users to practice their cyber security skills.\nSince these are test machines, let's use a more powerful instance type: m5.large .\nMachine 1:\nInstance Name: study-machine-1\nInstance Type: m5.large\nStatus: running\nMachine 2:\nInstance Name: study-machine-2\nInstance Type: m5.large\nStatus: running\nAfter creating the two new machines, your Instances block should look like this:\nBilling Analysis\nLet's analyze how much credit is costing our environment by navigating to the Billing section at the bottom of the page.\nThere, you can check how much each type of instance is costing you, as well as the total.\nCurrently, you are still developing your application, so users have not yet accessed your platform. We can optimize costs by stopping the two study machines and reviewing the new cost of your environment.\nGo to the Instances block and click the Stop button for both study-machine-1 and study-machine-2 .\nGo back to the Billing section, and you should see that your cost was reduced considerably:\n\nhttps://tryhackme.com/room/cloudcomputingfundamentals 1/1\n\n### TryHackMe _ Cloud Computing Fundamentals 4.pdf\n\n7/22/26, 2:55 PM TryHackMe | Cloud Computing Fundamentals\nStart AttackBox Save Room 430 Recommend Connectivity Options \nRoom progress: 0%\nTask 1 Introduction\nTask 2 Cloud Computing Overview\nTask 3 Deploying a Cloud Instance\nTask 4 Conclusion\nIn this room, you explored the core ideas behind cloud computing and how it enables flexible, scalable, and cost-effective access to\ncomputing resources.\nKey Terminology\nLet's quickly review some concepts we learned in this room:\nPublic Cloud\nCloud services you access over the internet that many people and companies share.\nPrivate Cloud\nA cloud built just for one company, so they have more control and security.\nHybrid Cloud\nA mix of public and private clouds that can work together and share data.\nIaaS\nA service where you rent basic computer parts like servers and storage from the cloud.\nPaaS\nA service that gives you a ready-to-use environment to build and run apps without managing servers.\nSaaS\nSoftware you use online without installing anything, like Gmail or Zoom.\nEC2\nAmazonʼs cloud computers that you can quickly create, use, and resize whenever you need them.\nWe also concluded that the key benefits of cloud computing are:\nScalability\nOn-demand self-service\nPay only for what you use\nSecurity\nHigh availability\nGlobal access\nFurther Learning\nYou are now ready to explore the next key area: Operating Systems. In the Operating Systems Introduction room, you will learn how OS\ncomponents manage hardware, processes, memory, and security. This knowledge is essential for understanding how cloud systems run\napplications behind the scenes!\nAnswer the questions below\nI'm ready for the next module!\nNo answer needed Check\n\nhttps://tryhackme.com/room/cloudcomputingfundamentals 1/1\n\n### TryHackMe _ Cloud Computing Fundamentals.pdf\n\n7/22/26, 2:52 PM TryHackMe | Cloud Computing Fundamentals\nRoom progress: 0% \nTask 1 Introduction\nImagine you have a fantastic idea for an app that helps students practice cyber security, and you host it on your own computer in your country.\nBut what can you do when users from other parts of the world try to access it and experience lag? What if many students connect at the same\ntime, or your computer is turned off? These limits make it hard for the app to grow.\nThat's when cloud computing comes to play and solves these problems!\nThe cloud is built on top of technologies you already learned, like virtualization and containers. These enable running many applications\nefficiently on shared infrastructure and quickly creating or changing environments when needed.\nIn this room, we will explore the basics of cloud computing and how this impacts the way modern applications are built, deployed, and used\nevery day.\nLearning Objectives\nWhat is cloud computing\nService models of cloud (IaaS, PaaS, SaaS)\nCloud Types (Private/Public/Hybrid)\nBenefits of cloud computing\nHow big companies are using the cloud\nPrerequisites\nVirtualisation Basics room\nAnswer the questions below\n\nhttps://tryhackme.com/room/cloudcomputingfundamentals 1/1"
         }
       ]
     }
